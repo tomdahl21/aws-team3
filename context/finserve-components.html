@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinServe Analytics — Components</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:       #1B2B4B;
+  --navy-mid:   #243660;
+  --navy-lt:    #EEF1F7;
+  --gold:       #C8922A;
+  --gold-lt:    #E8B458;
+  --gold-pale:  #FBF4E8;
+  --green:      #2D5E40;
+  --green-lt:   #3D7A56;
+  --green-pale: #EBF4EE;
+  --red:        #DC2626;
+  --red-pale:   #FEF2F2;
+  --gray-800:   #2C2C2C;
+  --gray-500:   #6B7280;
+  --gray-400:   #9CA3AF;
+  --gray-200:   #E5DDD0;
+  --gray-100:   #F0EBE1;
+  --gray-50:    #FAF7F2;
+  --white:      #FFFDF9;
+
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-full:999px;
+
+  --shadow-sm: 0 1px 3px rgba(27,43,75,0.08);
+  --shadow-md: 0 4px 16px rgba(27,43,75,0.1);
+
+  --font-display: 'Fraunces', serif;
+  --font-body:    'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  background: var(--gray-100);
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  background: var(--navy);
+  padding: 40px 56px 36px;
+  position: relative; overflow: hidden;
+}
+.page-header::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--green) 55%, var(--navy-mid) 100%);
+}
+.page-header::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,146,42,0.1) 0%, transparent 70%);
+}
+.header-inner { display: flex; align-items: center; gap: 20px; position: relative; z-index: 1; }
+.header-text h1 {
+  font-family: var(--font-display);
+  font-size: 32px; font-weight: 600; color: #fff; line-height: 1.1;
+}
+.header-text p { font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.45); margin-top: 6px; }
+
+/* ── LAYOUT ── */
+.page { max-width: 1080px; margin: 0 auto; padding: 56px 48px 100px; display: flex; flex-direction: column; gap: 64px; }
+
+/* ── SECTION ── */
+.section-head { margin-bottom: 28px; }
+.section-eyebrow {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 5px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 24px; font-weight: 600; color: var(--navy); margin-bottom: 5px;
+}
+.section-desc { font-size: 13.5px; font-weight: 300; color: var(--gray-500); line-height: 1.65; }
+
+/* ── SUBSECTION LABEL ── */
+.sub-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--gray-400);
+  margin-bottom: 12px; margin-top: 28px;
+}
+.sub-label:first-child { margin-top: 0; }
+
+/* ── COMPONENT FRAME ── */
+.frame {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-sm);
+}
+.frame + .frame { margin-top: 12px; }
+
+/* ── ROW / STACK ── */
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ══════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  font-family: var(--font-body); font-weight: 500; border: none; cursor: pointer;
+  border-radius: var(--radius-md); transition: all 0.15s ease; white-space: nowrap;
+  text-decoration: none;
+}
+/* Sizes */
+.btn-lg { padding: 13px 26px; font-size: 15px; }
+.btn-md { padding: 10px 20px; font-size: 14px; }
+.btn-sm { padding: 7px 14px;  font-size: 13px; }
+.btn-xs { padding: 4px 10px;  font-size: 12px; }
+
+/* Variants */
+.btn-primary { background: var(--navy); color: #fff; box-shadow: 0 2px 8px rgba(27,43,75,0.22); }
+.btn-primary:hover { background: var(--navy-mid); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(27,43,75,0.28); }
+.btn-primary:active { transform: none; }
+
+.btn-gold { background: var(--gold); color: #fff; box-shadow: 0 2px 8px rgba(200,146,42,0.28); }
+.btn-gold:hover { background: #D9A43C; transform: translateY(-1px); }
+
+.btn-green { background: var(--green); color: #fff; box-shadow: 0 2px 8px rgba(45,94,64,0.22); }
+.btn-green:hover { background: var(--green-lt); transform: translateY(-1px); }
+
+.btn-outline { background: transparent; color: var(--navy); border: 1.5px solid var(--gray-200); }
+.btn-outline:hover { border-color: var(--navy); background: var(--navy-lt); }
+
+.btn-ghost { background: transparent; color: var(--gray-500); }
+.btn-ghost:hover { background: var(--gray-100); color: var(--navy); }
+
+.btn-danger { background: var(--red); color: #fff; }
+.btn-danger:hover { background: #B91C1C; transform: translateY(-1px); }
+
+.btn-disabled { opacity: 0.45; pointer-events: none; }
+
+/* Icon button */
+.btn-icon-only { padding: 9px; border-radius: var(--radius-md); }
+
+/* ══════════════════════════════════════
+   BADGES
+══════════════════════════════════════ */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: var(--radius-full);
+  font-size: 11px; font-weight: 500;
+}
+.badge-dot::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.badge-navy   { background: var(--navy-lt);   color: var(--navy); }
+.badge-gold   { background: var(--gold-pale);  color: #8B6318; }
+.badge-green  { background: var(--green-pale); color: var(--green); }
+.badge-red    { background: var(--red-pale);   color: var(--red); }
+.badge-gray   { background: var(--gray-100);   color: var(--gray-500); }
+
+/* ══════════════════════════════════════
+   FORMS
+══════════════════════════════════════ */
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-label { font-size: 13px; font-weight: 500; color: var(--navy); }
+.form-hint  { font-size: 12px; color: var(--gray-400); }
+.form-error { font-size: 12px; color: var(--red); }
+.form-success { font-size: 12px; color: var(--green); }
+
+.input {
+  width: 100%; padding: 10px 14px;
+  border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+  font-size: 14px; font-family: var(--font-body); color: var(--navy);
+  background: var(--white); outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input::placeholder { color: var(--gray-400); }
+.input:hover  { border-color: #C8C0B0; }
+.input:focus  { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(27,43,75,0.07); }
+.input.state-error   { border-color: var(--red); }
+.input.state-error:focus { box-shadow: 0 0 0 3px rgba(220,38,38,0.08); }
+.input.state-success { border-color: var(--green); }
+.input.state-success:focus { box-shadow: 0 0 0 3px rgba(45,94,64,0.08); }
+.input.state-disabled { background: var(--gray-100); color: var(--gray-400); pointer-events: none; }
+
+.input-group { position: relative; }
+.input-group .input  { padding-left: 38px; }
+.input-group .ig-icon {
+  position: absolute; left: 12px; top: 50%;
+  transform: translateY(-50%); color: var(--gray-400); pointer-events: none;
+}
+.input-group .ig-suffix {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%); font-size: 13px; color: var(--gray-400);
+}
+
+.textarea {
+  width: 100%; padding: 10px 14px;
+  border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+  font-size: 14px; font-family: var(--font-body); color: var(--navy);
+  background: var(--white); outline: none; resize: vertical; min-height: 90px;
+  transition: border-color 0.15s;
+}
+.textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(27,43,75,0.07); }
+
+.select {
+  width: 100%; padding: 10px 36px 10px 14px;
+  border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+  font-size: 14px; font-family: var(--font-body); color: var(--navy);
+  background: var(--white); appearance: none; outline: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='7' viewBox='0 0 12 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%239CA3AF' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 13px center;
+  transition: border-color 0.15s;
+}
+.select:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(27,43,75,0.07); }
+
+/* Toggle */
+.toggle-row { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.toggle {
+  width: 38px; height: 21px; border-radius: var(--radius-full);
+  background: var(--gray-200); position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.toggle.on        { background: var(--navy); }
+.toggle.on.gold   { background: var(--gold); }
+.toggle.on.green  { background: var(--green); }
+.toggle::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+  transition: transform 0.2s;
+}
+.toggle.on::after { transform: translateX(17px); }
+.toggle-label { font-size: 14px; color: var(--gray-800); }
+
+/* Checkbox */
+.check-row { display: flex; align-items: flex-start; gap: 9px; cursor: pointer; }
+.checkbox {
+  width: 17px; height: 17px; border-radius: 4px; flex-shrink: 0; margin-top: 1px;
+  border: 1.5px solid var(--gray-200); background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.checkbox.on { background: var(--navy); border-color: var(--navy); }
+.check-label { font-size: 14px; color: var(--gray-800); line-height: 1.4; }
+
+/* Radio */
+.radio-row { display: flex; align-items: center; gap: 9px; cursor: pointer; }
+.radio {
+  width: 17px; height: 17px; border-radius: 50%; flex-shrink: 0;
+  border: 1.5px solid var(--gray-200); background: var(--white);
+  display: flex; align-items: center; justify-content: center; transition: border-color 0.15s;
+}
+.radio.on { border-color: var(--navy); }
+.radio.on::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--navy); }
+
+/* ══════════════════════════════════════
+   CARDS
+══════════════════════════════════════ */
+.card {
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden;
+}
+.card-header {
+  padding: 20px 24px 0;
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.card-body  { padding: 14px 24px 24px; }
+.card-footer {
+  padding: 14px 24px; border-top: 1px solid var(--gray-200);
+  display: flex; align-items: center; gap: 10px;
+}
+.card-title    { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--navy); }
+.card-subtitle { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+
+/* Stat card */
+.stat-card {
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg); padding: 20px 22px;
+  box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+}
+.stat-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 3px; border-radius: 0;
+}
+.stat-card.navy::before  { background: var(--navy); }
+.stat-card.gold::before  { background: var(--gold); }
+.stat-card.green::before { background: var(--green); }
+.stat-label { font-size: 10.5px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 8px; }
+.stat-value { font-family: var(--font-display); font-size: 30px; font-weight: 600; color: var(--navy); line-height: 1; }
+.stat-delta { font-size: 12px; font-weight: 500; margin-top: 6px; }
+.stat-delta.up   { color: var(--green); }
+.stat-delta.down { color: var(--red); }
+.stat-note { font-size: 12px; color: var(--gray-400); margin-top: 3px; }
+
+/* Data row */
+.data-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 0; border-bottom: 1px solid var(--gray-200);
+}
+.data-row:last-child { border-bottom: none; padding-bottom: 0; }
+.dr-icon {
+  width: 34px; height: 34px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.dr-main  { flex: 1; min-width: 0; }
+.dr-title { font-size: 14px; font-weight: 500; color: var(--navy); }
+.dr-sub   { font-size: 12px; color: var(--gray-500); margin-top: 1px; }
+.dr-right { text-align: right; flex-shrink: 0; }
+.dr-value { font-size: 14px; font-weight: 500; color: var(--navy); }
+.dr-meta  { font-size: 11px; color: var(--gray-400); margin-top: 1px; }
+
+/* Citation chip (AI-specific) */
+.citation-chip {
+  display: inline-flex; align-items: center;
+  padding: 3px 9px; border-radius: var(--radius-full);
+  font-size: 10.5px; font-weight: 500;
+  background: var(--gold-pale); color: #8B6318;
+  border: 1px solid #EDD9A3; cursor: pointer; transition: background 0.15s;
+}
+.citation-chip:hover { background: #F5E8CC; }
+
+/* ── SECTION DIVIDER ── */
+hr.divider {
+  border: none; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gray-200) 15%, var(--gray-200) 85%, transparent);
+}
+
+/* ══════════════════════════════════════
+   NAV — DESKTOP
+══════════════════════════════════════ */
+
+/* Global top bar */
+.topbar {
+  background: var(--navy);
+  height: 56px; display: flex; align-items: center;
+  padding: 0 24px; gap: 6px;
+  position: relative;
+}
+.topbar::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--green) 55%, var(--navy-mid) 100%);
+}
+.topbar-logo { display: flex; align-items: center; gap: 10px; margin-right: 12px; }
+.topbar-logo-text .t-brand { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: #fff; display: block; line-height: 1; }
+.topbar-logo-text .t-sub   { font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-lt); display: block; margin-top: 2px; }
+.topbar-nav { display: flex; gap: 2px; }
+.topbar-link {
+  padding: 7px 14px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.55);
+  transition: all 0.15s; cursor: pointer;
+}
+.topbar-link:hover  { color: #fff; background: rgba(255,255,255,0.08); }
+.topbar-link.active { color: #fff; background: rgba(255,255,255,0.12); }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.topbar-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--navy-mid); border: 1.5px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.65);
+}
+.topbar-notif {
+  width: 30px; height: 30px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.5); cursor: pointer; position: relative;
+  transition: color 0.15s;
+}
+.topbar-notif:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.notif-dot {
+  position: absolute; top: 5px; right: 5px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gold); border: 1.5px solid var(--navy);
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--white); border-right: 1px solid var(--gray-200);
+  width: 220px; padding: 20px 12px; display: flex; flex-direction: column; gap: 2px;
+}
+.sidebar-logo-row {
+  display: flex; align-items: center; gap: 9px;
+  padding: 4px 10px 18px; margin-bottom: 6px;
+  border-bottom: 1px solid var(--gray-200);
+}
+.sidebar-logo-row .s-brand { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--navy); display: block; line-height: 1; }
+.sidebar-logo-row .s-sub   { font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); display: block; margin-top: 2px; }
+.sidebar-section { font-size: 9.5px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray-400); padding: 12px 12px 4px; }
+.sidebar-section:first-of-type { padding-top: 4px; }
+.sidebar-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: var(--radius-md);
+  font-size: 13.5px; font-weight: 400; color: var(--gray-500);
+  cursor: pointer; transition: all 0.15s;
+}
+.sidebar-item:hover  { background: var(--gray-100); color: var(--navy); }
+.sidebar-item.active { background: var(--navy-lt); color: var(--navy); font-weight: 500; }
+.sidebar-item.active .si-icon { color: var(--navy); }
+.si-icon { font-size: 15px; width: 18px; text-align: center; color: var(--gray-400); flex-shrink: 0; }
+.si-badge {
+  margin-left: auto; background: var(--navy); color: #fff;
+  font-size: 10px; font-weight: 600;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center;
+}
+
+/* Sidebar layout wrapper */
+.sidebar-layout { display: flex; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+.sidebar-content { flex: 1; background: var(--gray-50); padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.sidebar-content-title { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--navy); }
+.sidebar-content-sub   { font-size: 13px; color: var(--gray-500); font-weight: 300; }
+
+/* Tab nav */
+.tab-nav { display: flex; border-bottom: 1px solid var(--gray-200); }
+.tab-item {
+  padding: 11px 18px; font-size: 13.5px; font-weight: 400;
+  color: var(--gray-500); cursor: pointer; position: relative; transition: color 0.15s;
+}
+.tab-item:hover { color: var(--navy); }
+.tab-item.active { color: var(--navy); font-weight: 500; }
+.tab-item.active::after {
+  content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+  height: 2px; background: var(--navy); border-radius: 2px 2px 0 0;
+}
+.tab-item .ti-count {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--navy-lt); color: var(--navy);
+  font-size: 10px; font-weight: 600; min-width: 18px; height: 16px;
+  padding: 0 4px; border-radius: var(--radius-full);
+  margin-left: 6px; vertical-align: middle;
+}
+
+/* Breadcrumb */
+.breadcrumb { display: flex; align-items: center; gap: 6px; }
+.bc-item { font-size: 13px; color: var(--gray-500); cursor: pointer; }
+.bc-item:hover { color: var(--navy); }
+.bc-item.active { color: var(--navy); font-weight: 500; pointer-events: none; }
+.bc-sep { color: var(--gray-400); font-size: 12px; }
+
+/* ══════════════════════════════════════
+   NAV — MOBILE
+══════════════════════════════════════ */
+.mobile-shell {
+  width: 320px; border-radius: 28px; overflow: hidden;
+  border: 1px solid var(--gray-200); box-shadow: 0 12px 40px rgba(27,43,75,0.15);
+  background: var(--gray-50); display: flex; flex-direction: column;
+}
+.mobile-status-bar {
+  background: var(--navy); padding: 10px 20px 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.mobile-status-bar span { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.7); }
+.mobile-top-nav {
+  background: var(--navy); padding: 10px 20px 18px;
+  position: relative;
+}
+.mobile-top-nav::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--green));
+}
+.mobile-top-row { display: flex; align-items: center; justify-content: space-between; }
+.mobile-greeting { font-size: 11px; color: rgba(255,255,255,0.5); }
+.mobile-name { font-family: var(--font-display); font-size: 19px; font-weight: 600; color: #fff; margin-top: 2px; }
+.mobile-search {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.1); border-radius: var(--radius-md);
+  padding: 8px 14px; color: rgba(255,255,255,0.4); font-size: 13px; margin-top: 14px;
+}
+.mobile-body { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.mobile-section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 2px; }
+
+/* Quick actions grid */
+.mobile-actions { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.mobile-action {
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg); padding: 14px 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 500; color: var(--gray-500);
+  text-align: center; box-shadow: var(--shadow-sm); cursor: pointer;
+  transition: all 0.15s;
+}
+.mobile-action:hover { border-color: var(--navy); color: var(--navy); }
+.ma-icon {
+  width: 34px; height: 34px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
+}
+
+/* Mobile list item */
+.mobile-list-item {
+  background: var(--white); border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200); padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: var(--shadow-sm); cursor: pointer; transition: all 0.15s;
+}
+.mobile-list-item:hover { border-color: var(--navy-lt); }
+.mli-icon { width: 36px; height: 36px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.mli-main  { flex: 1; min-width: 0; }
+.mli-title { font-size: 13.5px; font-weight: 500; color: var(--navy); }
+.mli-sub   { font-size: 11.5px; color: var(--gray-500); margin-top: 1px; }
+.mli-right { text-align: right; flex-shrink: 0; }
+.mli-value { font-size: 12px; font-weight: 500; color: var(--navy); }
+.mli-meta  { font-size: 10.5px; color: var(--gray-400); margin-top: 1px; }
+
+/* Bottom tab bar */
+.mobile-bottom-nav {
+  background: var(--white); border-top: 1px solid var(--gray-200);
+  padding: 8px 8px 18px; display: flex; justify-content: space-around;
+}
+.mbn-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px; padding: 6px 12px; border-radius: var(--radius-md);
+  font-size: 10px; font-weight: 500; color: var(--gray-400);
+  cursor: pointer; transition: all 0.15s; position: relative;
+}
+.mbn-item.active { color: var(--navy); background: var(--navy-lt); }
+.mbn-icon { font-size: 19px; }
+.mbn-dot {
+  position: absolute; top: 5px; right: 10px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gold); border: 1.5px solid var(--white);
+}
+
+/* ── ANIMATION ── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+.fade { animation: fadeUp 0.45s ease both; }
+.fade:nth-child(1) { animation-delay: 0.05s; }
+.fade:nth-child(2) { animation-delay: 0.15s; }
+.fade:nth-child(3) { animation-delay: 0.25s; }
+.fade:nth-child(4) { animation-delay: 0.35s; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="header-inner">
+    <svg width="36" height="36" viewBox="0 0 108 108" fill="none">
+      <path d="M54 98 A44 44 0 1 1 98 54" stroke="rgba(255,255,255,0.9)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+      <path d="M54 84 A30 30 0 1 1 64.3 25.8" stroke="#3D7A56" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>
+      <line x1="22" y1="86" x2="82" y2="26" stroke="rgba(255,255,255,0.65)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="82" y1="26" x2="97" y2="11" stroke="#E8B458" stroke-width="3" stroke-linecap="round"/>
+      <path d="M97 11 L88 14 M97 11 L94 20" stroke="#E8B458" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="82" cy="26" r="6" fill="#E8B458"/>
+      <circle cx="82" cy="26" r="3" fill="#1B2B4B"/>
+      <circle cx="54" cy="98" r="5" fill="rgba(255,255,255,0.55)"/>
+      <circle cx="98" cy="54" r="5" fill="#3D7A56"/>
+    </svg>
+    <div class="header-text">
+      <h1>Component Library</h1>
+      <p>FinServe Analytics · Buttons · Forms · Cards · v1.0</p>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ════════════════════════════════
+       BUTTONS
+  ════════════════════════════════ -->
+  <div class="fade">
+    <div class="section-head">
+      <div class="section-eyebrow">01</div>
+      <div class="section-title">Buttons</div>
+      <div class="section-desc">Six variants, four sizes. Use Primary for the single dominant action per region. Gold for AI/co-pilot actions. Ghost and Outline for secondary interactions.</div>
+    </div>
+
+    <div class="sub-label">Variants — Medium</div>
+    <div class="frame">
+      <div class="row">
+        <button class="btn btn-primary btn-md">Primary</button>
+        <button class="btn btn-gold btn-md">Gold</button>
+        <button class="btn btn-green btn-md">Green</button>
+        <button class="btn btn-outline btn-md">Outline</button>
+        <button class="btn btn-ghost btn-md">Ghost</button>
+        <button class="btn btn-danger btn-md">Danger</button>
+        <button class="btn btn-primary btn-md btn-disabled">Disabled</button>
+      </div>
+    </div>
+
+    <div class="sub-label">Sizes — Primary</div>
+    <div class="frame">
+      <div class="row" style="align-items:center;">
+        <button class="btn btn-primary btn-lg">Large</button>
+        <button class="btn btn-primary btn-md">Medium</button>
+        <button class="btn btn-primary btn-sm">Small</button>
+        <button class="btn btn-primary btn-xs">XSmall</button>
+      </div>
+    </div>
+
+    <div class="sub-label">With Icons</div>
+    <div class="frame">
+      <div class="row">
+        <button class="btn btn-primary btn-md">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Search Products
+        </button>
+        <button class="btn btn-gold btn-md">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2V14M2 8H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          New Query
+        </button>
+        <button class="btn btn-outline btn-md">
+          Export
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M13 10V13H3V10M8 2V10M5 7L8 10L11 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="btn btn-ghost btn-md">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 10a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="1.5"/><path d="M13.3 8S12 11 8 11 2.7 8 2.7 8 4 5 8 5s5.3 3 5.3 3z" stroke="currentColor" stroke-width="1.5"/></svg>
+          View
+        </button>
+        <!-- Icon-only -->
+        <button class="btn btn-outline btn-icon-only">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="btn btn-ghost btn-icon-only">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="4" r="1.5" fill="currentColor"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="12" r="1.5" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="sub-label">Badges</div>
+    <div class="frame">
+      <div class="row">
+        <span class="badge badge-navy badge-dot">Active Policy</span>
+        <span class="badge badge-gold badge-dot">Pending Review</span>
+        <span class="badge badge-green badge-dot">Verified</span>
+        <span class="badge badge-red badge-dot">Compliance Flag</span>
+        <span class="badge badge-gray">Draft</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ════════════════════════════════
+       FORMS
+  ════════════════════════════════ -->
+  <div class="fade">
+    <div class="section-head">
+      <div class="section-eyebrow">02</div>
+      <div class="section-title">Forms</div>
+      <div class="section-desc">Text inputs, selects, textareas, toggles, checkboxes, and radios. Consistent focus state across all controls — 3px navy ring, no outline.</div>
+    </div>
+
+    <div class="grid-2" style="gap:20px;">
+      <!-- Left col -->
+      <div>
+        <div class="sub-label">Text Inputs</div>
+        <div class="frame stack">
+          <div class="form-group">
+            <label class="form-label">Policy Number</label>
+            <div class="input-group">
+              <svg class="ig-icon" width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 5.5h5M5.5 8h3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <input class="input" type="text" placeholder="POL-2026-00441">
+            </div>
+            <span class="form-hint">Enter the full policy reference</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Coverage Amount</label>
+            <div class="input-group">
+              <input class="input state-success" type="text" value="500,000" style="padding-left:14px;">
+              <span class="ig-suffix">EUR</span>
+            </div>
+            <span class="form-success">Valid coverage amount</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Client Name</label>
+            <input class="input state-error" type="text" value="M. Bia$$chi">
+            <span class="form-error">Invalid characters in name field</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Session Notes</label>
+            <textarea class="textarea" placeholder="Add context for this client interaction…"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Product Category</label>
+            <select class="select">
+              <option>Life Insurance</option>
+              <option>Health Insurance</option>
+              <option>Property &amp; Casualty</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right col -->
+      <div>
+        <div class="sub-label">Toggles</div>
+        <div class="frame stack">
+          <div class="toggle-row">
+            <div class="toggle on"></div>
+            <span class="toggle-label">Context retention enabled</span>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle on gold"></div>
+            <span class="toggle-label">Citation display</span>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle on green"></div>
+            <span class="toggle-label">Compliance flag alerts</span>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle"></div>
+            <span class="toggle-label" style="color:var(--gray-400);">Autonomous suggestions (off)</span>
+          </div>
+        </div>
+
+        <div class="sub-label">Checkboxes</div>
+        <div class="frame stack">
+          <div class="check-row">
+            <div class="checkbox on">
+              <svg width="9" height="7" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="check-label">Include exclusion clauses</span>
+          </div>
+          <div class="check-row">
+            <div class="checkbox on">
+              <svg width="9" height="7" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="check-label">Show source document references</span>
+          </div>
+          <div class="check-row">
+            <div class="checkbox"></div>
+            <span class="check-label">Enable autonomous follow-up</span>
+          </div>
+        </div>
+
+        <div class="sub-label">Radio Buttons</div>
+        <div class="frame stack">
+          <div class="radio-row">
+            <div class="radio on"></div>
+            <span class="check-label">Experienced RM</span>
+          </div>
+          <div class="radio-row">
+            <div class="radio"></div>
+            <span class="check-label">New RM</span>
+          </div>
+          <div class="radio-row">
+            <div class="radio"></div>
+            <span class="check-label">Specialist RM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ════════════════════════════════
+       CARDS
+  ════════════════════════════════ -->
+  <div class="fade">
+    <div class="section-head">
+      <div class="section-eyebrow">03</div>
+      <div class="section-title">Cards</div>
+      <div class="section-desc">Stat cards, content cards with data rows, and the AI response card with citations. The 3px top border encodes category — navy, gold, or green.</div>
+    </div>
+
+    <div class="sub-label">Stat Cards</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+      <div class="stat-card navy">
+        <div class="stat-label">Queries Today</div>
+        <div class="stat-value">148</div>
+        <div class="stat-delta up">↑ 12% vs yesterday</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-label">Avg Response</div>
+        <div class="stat-value">1.8s</div>
+        <div class="stat-delta up">↑ 0.3s faster</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Accuracy Rate</div>
+        <div class="stat-value">96.4%</div>
+        <div class="stat-note">Last 7 days</div>
+      </div>
+      <div class="stat-card navy">
+        <div class="stat-label">Satisfaction</div>
+        <div class="stat-value">4.7</div>
+        <div class="stat-note">Out of 5.0</div>
+      </div>
+    </div>
+
+    <div class="sub-label">Content Card — Data Rows</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Active Client Sessions</div>
+            <div class="card-subtitle">Today · 3 open</div>
+          </div>
+          <span class="badge badge-green badge-dot">Live</span>
+        </div>
+        <div class="card-body">
+          <div class="data-row">
+            <div class="dr-icon" style="background:var(--navy-lt);">👤</div>
+            <div class="dr-main">
+              <div class="dr-title">Marco Bianchi</div>
+              <div class="dr-sub">Vita — Coverage query</div>
+            </div>
+            <div class="dr-right">
+              <div class="dr-value">3 queries</div>
+              <div class="dr-meta">14 min ago</div>
+            </div>
+          </div>
+          <div class="data-row">
+            <div class="dr-icon" style="background:var(--green-pale);">👤</div>
+            <div class="dr-main">
+              <div class="dr-title">Giulia Ferraro</div>
+              <div class="dr-sub">Claims dispute</div>
+            </div>
+            <div class="dr-right">
+              <span class="badge badge-red badge-dot">Flagged</span>
+            </div>
+          </div>
+          <div class="data-row">
+            <div class="dr-icon" style="background:var(--gold-pale);">👤</div>
+            <div class="dr-main">
+              <div class="dr-title">Luca Romano</div>
+              <div class="dr-sub">New purchase</div>
+            </div>
+            <div class="dr-right">
+              <div class="dr-value">4 queries</div>
+              <div class="dr-meta">1 hr ago</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-ghost btn-sm">View all</button>
+          <button class="btn btn-outline btn-sm" style="margin-left:auto;">Export</button>
+        </div>
+      </div>
+
+      <!-- AI Response Card -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">AI Co-Pilot Response</div>
+            <div class="card-subtitle">Experienced RM · Italian · 1.8s</div>
+          </div>
+          <span class="badge badge-gold">RAG</span>
+        </div>
+        <div class="card-body">
+          <p style="font-size:13.5px;line-height:1.7;color:var(--gray-800);font-weight:300;">
+            Prodotto A esclude l'invalidità parziale inferiore al 30% nei primi 24 mesi. Dal 25° mese, copertura completa per invalidità ≥ 20%. ⚠️ Esclusioni preesistenti restano escluse permanentemente.
+          </p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;">
+            <span class="citation-chip">§ 12.3 — Esclusioni</span>
+            <span class="citation-chip">§ 14.1 — Copertura</span>
+            <span class="citation-chip">§ 9.4 — Clausole</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-ghost btn-sm">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 2V1M7 2V1M9 2V1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 6H6v8h8V6z" fill="currentColor" opacity="0.15"/><rect x="6" y="6" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Copy to notes
+          </button>
+          <div style="margin-left:auto;display:flex;gap:6px;">
+            <button class="btn btn-ghost btn-icon-only" title="Thumbs up">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M5 7V13H3a1 1 0 01-1-1V9a1 1 0 011-1h2zm0 0l2-5a2 2 0 012 2v1h3a1 1 0 011 1l-1 5a1 1 0 01-1 1H5V7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="btn btn-ghost btn-icon-only" title="Thumbs down">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M11 9V3h2a1 1 0 011 1v2a1 1 0 01-1 1h-2zm0 0l-2 5a2 2 0 01-2-2v-1H4a1 1 0 01-1-1l1-5a1 1 0 011-1h6v4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ════════════════════════════════
+       DESKTOP NAV
+  ════════════════════════════════ -->
+  <div class="fade">
+    <div class="section-head">
+      <div class="section-eyebrow">04</div>
+      <div class="section-title">Desktop Navigation</div>
+      <div class="section-desc">Three patterns: a global top bar for app-wide navigation, a sidebar for workspace navigation, and tab + breadcrumb for in-page context. Top bar is always navy — it carries the brand.</div>
+    </div>
+
+    <div class="sub-label">Global Top Bar</div>
+    <div style="border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-md);margin-bottom:20px;">
+      <div class="topbar">
+        <div class="topbar-logo">
+          <svg width="26" height="26" viewBox="0 0 108 108" fill="none">
+            <path d="M54 98 A44 44 0 1 1 98 54" stroke="rgba(255,255,255,0.85)" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <line x1="22" y1="86" x2="82" y2="26" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-linecap="round"/>
+            <line x1="82" y1="26" x2="97" y2="11" stroke="#E8B458" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M97 11 L88 14 M97 11 L94 20" stroke="#E8B458" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="82" cy="26" r="6" fill="#E8B458"/><circle cx="82" cy="26" r="3" fill="#1B2B4B"/>
+            <circle cx="54" cy="98" r="5" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="98" cy="54" r="5" fill="#3D7A56"/>
+          </svg>
+          <div class="topbar-logo-text">
+            <span class="t-brand">FinServe</span>
+            <span class="t-sub">Analytics</span>
+          </div>
+        </div>
+        <nav class="topbar-nav">
+          <div class="topbar-link active">Dashboard</div>
+          <div class="topbar-link">Clients</div>
+          <div class="topbar-link">Products</div>
+          <div class="topbar-link">Reports</div>
+        </nav>
+        <div class="topbar-right">
+          <div class="topbar-notif">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a5 5 0 00-5 5v2l-1.5 2h13L13 9V7a5 5 0 00-5-5zM6.5 13a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <div class="notif-dot"></div>
+          </div>
+          <div class="topbar-avatar">SF</div>
+        </div>
+      </div>
+      <div style="background:var(--gray-50);padding:20px 24px;font-size:13px;color:var(--gray-500);font-weight:300;">
+        Page content area — 100% width, full remaining height.
+      </div>
+    </div>
+
+    <div class="sub-label">Sidebar + Content Area</div>
+    <div class="sidebar-layout" style="margin-bottom:20px;">
+      <div class="sidebar">
+        <div class="sidebar-logo-row">
+          <svg width="22" height="22" viewBox="0 0 108 108" fill="none">
+            <path d="M54 98 A44 44 0 1 1 98 54" stroke="#1B2B4B" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <line x1="22" y1="86" x2="82" y2="26" stroke="#1B2B4B" stroke-width="3" stroke-linecap="round"/>
+            <line x1="82" y1="26" x2="97" y2="11" stroke="#C8922A" stroke-width="3.5" stroke-linecap="round"/>
+            <circle cx="82" cy="26" r="6" fill="#C8922A"/><circle cx="82" cy="26" r="3" fill="#1B2B4B"/>
+            <circle cx="54" cy="98" r="5" fill="#1B2B4B"/>
+            <circle cx="98" cy="54" r="5" fill="#2D5E40"/>
+          </svg>
+          <div>
+            <span class="s-brand">Workspace</span>
+            <span class="s-sub">RM Portal</span>
+          </div>
+        </div>
+        <div class="sidebar-section">Main</div>
+        <div class="sidebar-item active">
+          <span class="si-icon">⊞</span> Dashboard
+        </div>
+        <div class="sidebar-item">
+          <span class="si-icon">💬</span> AI Co-Pilot
+          <span class="si-badge">2</span>
+        </div>
+        <div class="sidebar-item">
+          <span class="si-icon">👥</span> Clients
+        </div>
+        <div class="sidebar-item">
+          <span class="si-icon">📋</span> Products
+        </div>
+        <div class="sidebar-section">Analytics</div>
+        <div class="sidebar-item">
+          <span class="si-icon">📊</span> Reports
+        </div>
+        <div class="sidebar-item">
+          <span class="si-icon">✓</span> Evaluation
+        </div>
+        <div class="sidebar-section">Account</div>
+        <div class="sidebar-item">
+          <span class="si-icon">⚙</span> Settings
+        </div>
+      </div>
+      <div class="sidebar-content">
+        <div class="sidebar-content-title">Dashboard</div>
+        <div class="sidebar-content-sub">Sidebar is 220px fixed. Content area flexes to fill remaining width. Active state: navy-lt background, navy text, 500 weight.</div>
+      </div>
+    </div>
+
+    <div class="sub-label">Tab Nav + Breadcrumb</div>
+    <div class="frame" style="padding:0;overflow:hidden;">
+      <div style="padding:16px 24px 0;">
+        <div class="breadcrumb" style="margin-bottom:14px;">
+          <span class="bc-item">Dashboard</span>
+          <span class="bc-sep">›</span>
+          <span class="bc-item">Clients</span>
+          <span class="bc-sep">›</span>
+          <span class="bc-item">Marco Bianchi</span>
+          <span class="bc-sep">›</span>
+          <span class="bc-item active">Policy Query</span>
+        </div>
+      </div>
+      <div class="tab-nav" style="padding:0 24px;">
+        <div class="tab-item active">Overview</div>
+        <div class="tab-item">Policies <span class="ti-count">4</span></div>
+        <div class="tab-item">Queries</div>
+        <div class="tab-item">Documents</div>
+        <div class="tab-item">Notes</div>
+      </div>
+      <div style="padding:20px 24px;font-size:13px;color:var(--gray-500);font-weight:300;line-height:1.6;">
+        Tab content renders here. Active tab: 2px navy bottom border, 500 weight. Counts use navy-lt pill badge.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ════════════════════════════════
+       MOBILE NAV
+  ════════════════════════════════ -->
+  <div class="fade">
+    <div class="section-head">
+      <div class="section-eyebrow">05</div>
+      <div class="section-title">Mobile Navigation</div>
+      <div class="section-desc">Navy header with greeting and search, quick action grid, list items, and a bottom tab bar. The gold dot on the AI tab signals unread state. Bottom bar sits above the system home indicator.</div>
+    </div>
+
+    <div style="display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap;">
+
+      <!-- Screen 1: Home -->
+      <div>
+        <div class="sub-label" style="text-align:center;">Home Screen</div>
+        <div class="mobile-shell">
+          <div class="mobile-status-bar">
+            <span>9:41</span>
+            <span style="display:flex;gap:6px;align-items:center;">
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><rect x="0" y="3" width="2" height="7" rx="1" fill="currentColor" opacity="0.4"/><rect x="3" y="2" width="2" height="8" rx="1" fill="currentColor" opacity="0.6"/><rect x="6" y="1" width="2" height="9" rx="1" fill="currentColor" opacity="0.8"/><rect x="9" y="0" width="2" height="10" rx="1" fill="currentColor"/><rect x="12" y="3" width="2" height="5" rx="1" fill="currentColor" opacity="0.3"/></svg>
+              ●●●
+            </span>
+          </div>
+          <div class="mobile-top-nav">
+            <div class="mobile-top-row">
+              <div>
+                <div class="mobile-greeting">Buongiorno,</div>
+                <div class="mobile-name">Sofia Ferrari</div>
+              </div>
+              <svg width="28" height="28" viewBox="0 0 108 108" fill="none">
+                <path d="M54 98 A44 44 0 1 1 98 54" stroke="rgba(255,255,255,0.85)" stroke-width="6" fill="none" stroke-linecap="round"/>
+                <line x1="22" y1="86" x2="82" y2="26" stroke="rgba(255,255,255,0.55)" stroke-width="3" stroke-linecap="round"/>
+                <line x1="82" y1="26" x2="97" y2="11" stroke="#E8B458" stroke-width="3.5" stroke-linecap="round"/>
+                <circle cx="82" cy="26" r="6" fill="#E8B458"/><circle cx="82" cy="26" r="3" fill="#1B2B4B"/>
+              </svg>
+            </div>
+            <div class="mobile-search">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Search products or clients…
+            </div>
+          </div>
+          <div class="mobile-body">
+            <div class="mobile-section-label">Quick Actions</div>
+            <div class="mobile-actions">
+              <div class="mobile-action"><div class="ma-icon" style="background:var(--navy-lt);">💬</div>AI Query</div>
+              <div class="mobile-action"><div class="ma-icon" style="background:var(--gold-pale);">👥</div>Clients</div>
+              <div class="mobile-action"><div class="ma-icon" style="background:var(--green-pale);">📋</div>Products</div>
+            </div>
+            <div class="mobile-section-label">Active Sessions</div>
+            <div class="mobile-list-item">
+              <div class="mli-icon" style="background:var(--navy-lt);">👤</div>
+              <div class="mli-main">
+                <div class="mli-title">Marco Bianchi</div>
+                <div class="mli-sub">Vita — Coverage query</div>
+              </div>
+              <div class="mli-right">
+                <span class="badge badge-gold" style="font-size:10px;">Active</span>
+              </div>
+            </div>
+            <div class="mobile-list-item">
+              <div class="mli-icon" style="background:var(--green-pale);">👤</div>
+              <div class="mli-main">
+                <div class="mli-title">Giulia Ferraro</div>
+                <div class="mli-sub">Claims dispute</div>
+              </div>
+              <div class="mli-right">
+                <span class="badge badge-red" style="font-size:10px;">Flagged</span>
+              </div>
+            </div>
+          </div>
+          <div class="mobile-bottom-nav">
+            <div class="mbn-item active"><div class="mbn-icon">⊞</div>Home</div>
+            <div class="mbn-item"><div class="mbn-icon">💬</div>AI<div class="mbn-dot"></div></div>
+            <div class="mbn-item"><div class="mbn-icon">👥</div>Clients</div>
+            <div class="mbn-item"><div class="mbn-icon">📊</div>Reports</div>
+            <div class="mbn-item"><div class="mbn-icon">⚙</div>Settings</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 2: AI Co-Pilot tab active -->
+      <div>
+        <div class="sub-label" style="text-align:center;">AI Co-Pilot Tab</div>
+        <div class="mobile-shell">
+          <div class="mobile-status-bar">
+            <span>9:43</span><span>●●●</span>
+          </div>
+          <div style="background:var(--navy);padding:14px 20px 16px;position:relative;">
+            <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--green));"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="font-family:var(--font-display);font-size:16px;font-weight:600;color:#fff;">AI Co-Pilot</div>
+              <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#5EA876;">
+                <div style="width:6px;height:6px;border-radius:50%;background:#5EA876;"></div>Online
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:12px;">
+              <button style="padding:5px 12px;border-radius:var(--radius-full);font-size:11px;font-weight:500;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);cursor:pointer;">New RM</button>
+              <button style="padding:5px 12px;border-radius:var(--radius-full);font-size:11px;font-weight:500;background:rgba(255,255,255,0.18);color:#fff;border:1px solid rgba(255,255,255,0.3);cursor:pointer;">Experienced ✓</button>
+              <button style="padding:5px 12px;border-radius:var(--radius-full);font-size:11px;font-weight:500;background:transparent;color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.12);cursor:pointer;">Specialist</button>
+            </div>
+          </div>
+          <div style="flex:1;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--navy-900,#0F1B30);">
+            <!-- User message -->
+            <div style="align-self:flex-end;max-width:82%;">
+              <div style="background:var(--navy);color:rgba(255,255,255,0.9);padding:9px 13px;border-radius:14px 14px 4px 14px;font-size:12.5px;line-height:1.55;">
+                Esclusioni invalidità parziale, Prodotto A?
+              </div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.25);text-align:right;margin-top:3px;">14:22</div>
+            </div>
+            <!-- AI message -->
+            <div style="align-self:flex-start;max-width:88%;">
+              <div style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);padding:9px 13px;border-radius:14px 14px 14px 4px;font-size:12.5px;line-height:1.55;border:1px solid rgba(255,255,255,0.08);">
+                Esclusa invalidità &lt;30% nei primi 24 mesi. Dal 25° mese, copertura ≥20%.
+              </div>
+              <div style="display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;">
+                <span class="citation-chip" style="font-size:9.5px;">§ 12.3</span>
+                <span class="citation-chip" style="font-size:9.5px;">§ 14.1</span>
+              </div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">14:22</div>
+            </div>
+          </div>
+          <!-- Mobile input -->
+          <div style="padding:10px 14px 14px;background:rgba(15,27,48,0.95);border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:center;">
+            <div style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-full);padding:9px 14px;font-size:12.5px;color:rgba(255,255,255,0.3);">
+              Fai una domanda…
+            </div>
+            <div style="width:34px;height:34px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M14 2L2 6.5L7 8.5M14 2L9.5 14L7 8.5M14 2L7 8.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="mobile-bottom-nav">
+            <div class="mbn-item"><div class="mbn-icon">⊞</div>Home</div>
+            <div class="mbn-item active"><div class="mbn-icon">💬</div>AI</div>
+            <div class="mbn-item"><div class="mbn-icon">👥</div>Clients</div>
+            <div class="mbn-item"><div class="mbn-icon">📊</div>Reports</div>
+            <div class="mbn-item"><div class="mbn-icon">⚙</div>Settings</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Annotation notes -->
+      <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:16px;padding-top:36px;">
+        <div class="frame">
+          <div class="sub-label" style="margin-top:0;">Bottom Tab Bar Rules</div>
+          <div style="font-size:13px;font-weight:300;color:var(--gray-500);line-height:1.7;display:flex;flex-direction:column;gap:10px;">
+            <div>Max <strong style="color:var(--navy);">5 items</strong> — any more and labels truncate on small screens.</div>
+            <div>Active item: <strong style="color:var(--navy);">navy-lt background</strong>, navy text and icon.</div>
+            <div>Notification state: <strong style="color:var(--gold);">gold dot</strong> in top-right corner of icon — never a number badge on mobile.</div>
+            <div>Bottom padding: <strong style="color:var(--navy);">18px</strong> to clear iOS home indicator.</div>
+          </div>
+        </div>
+        <div class="frame">
+          <div class="sub-label" style="margin-top:0;">Top Nav Rules</div>
+          <div style="font-size:13px;font-weight:300;color:var(--gray-500);line-height:1.7;display:flex;flex-direction:column;gap:10px;">
+            <div>Always <strong style="color:var(--navy);">navy background</strong> — consistent with desktop header. Brand mark top-right only on home screen.</div>
+            <div>Contextual screens (e.g. AI tab) replace the greeting with a <strong style="color:var(--navy);">section title + status</strong>.</div>
+            <div>The <strong style="color:var(--gold);">gradient bar</strong> (gold → green) persists on every screen as a brand anchor.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

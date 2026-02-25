@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinServe Analytics — Journey Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:       #1B2B4B;
+  --navy-mid:   #243660;
+  --navy-lt:    #EEF1F7;
+  --gold:       #C8922A;
+  --gold-lt:    #E8B458;
+  --gold-pale:  #FBF4E8;
+  --green:      #2D5E40;
+  --green-lt:   #3D7A56;
+  --green-pale: #EBF4EE;
+  --red:        #DC2626;
+  --red-pale:   #FEF2F2;
+  --purple:     #6B3FA0;
+  --purple-pale:#F3EEF9;
+  --gray-800:   #2C2C2C;
+  --gray-600:   #4B5563;
+  --gray-500:   #6B7280;
+  --gray-400:   #9CA3AF;
+  --gray-200:   #E5DDD0;
+  --gray-100:   #F0EBE1;
+  --gray-50:    #FAF7F2;
+  --white:      #FFFDF9;
+  --bg:         #EDE8DE;
+
+  --r-sm:  6px;
+  --r-md:  10px;
+  --r-lg:  16px;
+  --r-full:999px;
+
+  --shadow-sm: 0 1px 4px rgba(27,43,75,0.08);
+  --shadow-md: 0 4px 20px rgba(27,43,75,0.1);
+  --shadow-lg: 0 10px 40px rgba(27,43,75,0.14);
+
+  --font-d: 'Fraunces', serif;
+  --font-b: 'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family: var(--font-b);
+  background: var(--bg);
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══ HEADER ══ */
+.header {
+  background: var(--navy);
+  padding: 0 48px;
+  height: 58px;
+  display: flex; align-items: center; gap: 14px;
+  position: relative;
+}
+.header::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--green) 55%, var(--navy-mid) 100%);
+}
+.h-logo { display:flex; align-items:center; gap:10px; }
+.h-brand { font-family:var(--font-d); font-size:15px; font-weight:600; color:#fff; }
+.h-sub   { font-size:8px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold-lt); display:block; margin-top:2px; }
+.h-sep   { width:1px; height:22px; background:rgba(255,255,255,.12); margin:0 10px; }
+.h-title { font-size:13px; color:rgba(255,255,255,.45); }
+.h-right { margin-left:auto; font-size:11px; color:rgba(255,255,255,.3); letter-spacing:.04em; }
+
+/* ══ HERO ══ */
+.hero {
+  background: var(--navy);
+  padding: 52px 48px 44px;
+  position:relative; overflow:hidden;
+}
+.hero::before {
+  content:''; position:absolute; bottom:-80px; right:-80px;
+  width:400px; height:400px; border-radius:50%;
+  background:radial-gradient(circle, rgba(45,94,64,.14) 0%, transparent 65%);
+}
+.hero::after {
+  content:''; position:absolute; top:-40px; left:38%;
+  width:280px; height:280px; border-radius:50%;
+  background:radial-gradient(circle, rgba(200,146,42,.08) 0%, transparent 65%);
+}
+.hero-inner { position:relative; z-index:1; }
+.hero-eye { font-size:10px; font-weight:500; letter-spacing:.22em; text-transform:uppercase; color:var(--gold-lt); margin-bottom:10px; }
+.hero-title { font-family:var(--font-d); font-size:40px; font-weight:600; color:#fff; line-height:1.1; margin-bottom:10px; }
+.hero-title em { font-style:italic; color:var(--gold-lt); }
+.hero-desc { font-size:14px; font-weight:300; color:rgba(255,255,255,.45); line-height:1.7; max-width:600px; margin-bottom:28px; }
+.hero-pills { display:flex; gap:10px; flex-wrap:wrap; }
+.hero-pill {
+  padding:5px 14px; border-radius:var(--r-full);
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+  font-size:12px; color:rgba(255,255,255,.6);
+}
+.hero-pill strong { color:rgba(255,255,255,.85); font-weight:500; }
+
+/* ══ LEGEND ══ */
+.legend-bar {
+  background:var(--white);
+  border-bottom:1px solid var(--gray-200);
+  padding:12px 48px;
+  display:flex; align-items:center; gap:24px; flex-wrap:wrap;
+}
+.legend-item { display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--gray-500); }
+.legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.legend-swatch { width:14px; height:10px; border-radius:3px; flex-shrink:0; }
+
+/* ══ TABLE WRAPPER ══ */
+.table-wrap {
+  padding: 36px 48px 80px;
+  overflow-x: auto;
+}
+
+/* ══ JOURNEY TABLE ══ */
+.journey {
+  width: 100%;
+  min-width: 1100px;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--gray-200);
+}
+
+/* ── Stage header row ── */
+.stage-header-row th { padding: 0; }
+
+.stage-th {
+  background: var(--navy);
+  padding: 22px 28px 20px;
+  text-align: left;
+  border-right: 1px solid rgba(255,255,255,.1);
+  vertical-align: top;
+  position: relative;
+}
+.stage-th:last-child { border-right: none; }
+
+.stage-th.row-label-th {
+  width: 140px;
+  background: var(--navy);
+  padding: 22px 24px 20px;
+}
+.stage-th.row-label-th .rl-brand {
+  font-family: var(--font-d); font-size:16px; font-weight:600; color:#fff; display:block;
+}
+.stage-th.row-label-th .rl-sub {
+  font-size:8px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold-lt); display:block; margin-top:4px;
+}
+
+.stage-num-small { font-size:10px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:10px; padding-top:20px; }
+.stage-name-th { font-family:var(--font-d); font-size:20px; font-weight:600; color:#fff; line-height:1.2; margin-bottom:6px; }
+.stage-sub-th  { font-size:12px; font-weight:300; color:rgba(255,255,255,.4); }
+.stage-bar {
+  position:absolute; bottom:0; left:0; right:0; height:3px;
+}
+
+/* Stage accent colors */
+.s1 .stage-bar { background: #4A6FA5; }
+.s2 .stage-bar { background: var(--green-lt); }
+.s3 .stage-bar { background: var(--gold); }
+.s4 .stage-bar { background: var(--gold); }
+.s5 .stage-bar { background: var(--purple); }
+.s6 .stage-bar { background: var(--green); }
+
+/* ── Row label cells ── */
+.row-label-cell {
+  background: var(--gray-50);
+  padding: 16px 16px 16px 20px;
+  border-right: 1px solid var(--gray-200);
+  border-top: 1px solid var(--gray-200);
+  vertical-align: middle;
+  width: 130px;
+}
+.rl-icon { font-size:18px; margin-bottom:5px; display:block; }
+.rl-name { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--navy); line-height:1.3; }
+.rl-desc { font-size:10.5px; font-weight:300; color:var(--gray-400); margin-top:2px; line-height:1.4; }
+
+/* ── Content cells ── */
+td.cell {
+  background: var(--white);
+  padding: 18px 20px;
+  border-right: 1px solid var(--gray-200);
+  border-top: 1px solid var(--gray-200);
+  vertical-align: top;
+  font-size: 12.5px;
+  color: var(--gray-600);
+  font-weight: 300;
+  line-height: 1.6;
+}
+td.cell:last-child { border-right: none; }
+
+/* Alternate row bg */
+tr.row-alt td.cell,
+tr.row-alt .row-label-cell { background: var(--gray-50); }
+
+/* ── Within cells ── */
+.cell-items { display:flex; flex-direction:column; gap:9px; }
+
+.cell-item {
+  display:flex; gap:8px; align-items:flex-start;
+}
+.ci-dot {
+  width:6px; height:6px; border-radius:50%;
+  margin-top:5px; flex-shrink:0;
+}
+.ci-text { font-size:12.5px; font-weight:300; color:var(--gray-600); line-height:1.55; }
+.ci-text strong { font-weight:500; color:var(--navy); }
+
+/* Quote */
+.cell-quote {
+  font-style:italic; font-size:12.5px; font-weight:300;
+  color:var(--gray-600); line-height:1.6;
+  border-left:2px solid var(--gray-200);
+  padding-left:10px; margin-top:4px;
+}
+.cell-quote.gold { border-color:var(--gold); color:#6B4C10; }
+.cell-quote.navy { border-color:var(--navy); }
+.cell-quote.green { border-color:var(--green); color:var(--green); }
+.cell-quote.red { border-color:var(--red); color:var(--red); }
+
+/* Chip */
+.chip {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:4px 10px; border-radius:var(--r-md);
+  font-size:11.5px; font-weight:400;
+}
+.chip-navy  { background:var(--navy-lt);   color:var(--navy); }
+.chip-gold  { background:var(--gold-pale);  color:#7A5218; }
+.chip-green { background:var(--green-pale); color:var(--green); }
+.chip-red   { background:var(--red-pale);   color:var(--red); }
+.chip-purple{ background:var(--purple-pale);color:var(--purple); }
+.chip-gray  { background:var(--gray-100);   color:var(--gray-500); }
+.chip-ai    { background:var(--navy); color:rgba(255,255,255,.9); }
+
+.chips { display:flex; gap:6px; flex-wrap:wrap; }
+
+/* Emotion indicator */
+.emotion-wrap { display:flex; flex-direction:column; gap:6px; }
+.emotion-track { height:6px; border-radius:3px; background:var(--gray-200); position:relative; overflow:visible; }
+.emotion-fill  { height:100%; border-radius:3px; position:absolute; left:0; top:0; }
+.emotion-node  {
+  width:16px; height:16px; border-radius:50%;
+  border:2.5px solid var(--white); box-shadow:var(--shadow-sm);
+  position:absolute; top:50%; transform:translate(-50%,-50%);
+  z-index:2;
+}
+.emotion-label { font-size:11px; font-weight:500; }
+
+/* Opp card */
+.opp {
+  border-left:3px solid;
+  padding:9px 12px;
+  border-radius:0 var(--r-md) var(--r-md) 0;
+  background:var(--gray-50);
+  margin-top:6px;
+}
+.opp:first-child { margin-top:0; }
+.opp strong { display:block; font-size:12px; font-weight:600; color:var(--navy); margin-bottom:2px; }
+.opp p { font-size:11.5px; font-weight:300; color:var(--gray-500); line-height:1.5; }
+.opp.navy   { border-color:var(--navy); }
+.opp.gold   { border-color:var(--gold); }
+.opp.green  { border-color:var(--green); }
+.opp.red    { border-color:var(--red); }
+.opp.purple { border-color:var(--purple); }
+
+/* ══ SUMMARY FOOTER ══ */
+.summary {
+  margin: 0 48px 80px;
+  background: var(--navy);
+  border-radius: var(--r-lg);
+  padding: 36px 40px;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 0;
+  box-shadow: var(--shadow-lg);
+  position: relative; overflow: hidden;
+}
+.summary::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg, var(--gold) 0%, var(--green) 55%, var(--navy-mid) 100%);
+}
+.sum-cell {
+  padding: 0 32px 0 0;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.sum-cell + .sum-cell {
+  padding-left: 32px;
+  border-left: 1px solid rgba(255,255,255,.1);
+}
+.sum-eye   { font-size:9px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.3); }
+.sum-val   { font-family:var(--font-d); font-size:32px; font-weight:600; color:#fff; line-height:1; }
+.sum-label { font-size:12.5px; font-weight:300; color:rgba(255,255,255,.5); line-height:1.5; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="h-logo">
+    <svg width="26" height="26" viewBox="0 0 108 108" fill="none">
+      <path d="M54 98 A44 44 0 1 1 98 54" stroke="rgba(255,255,255,.9)" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M54 84 A30 30 0 1 1 64.3 25.8" stroke="#3D7A56" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/>
+      <line x1="22" y1="86" x2="82" y2="26" stroke="rgba(255,255,255,.6)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="82" y1="26" x2="97" y2="11" stroke="#E8B458" stroke-width="3" stroke-linecap="round"/>
+      <path d="M97 11 L88 14 M97 11 L94 20" stroke="#E8B458" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="82" cy="26" r="6" fill="#E8B458"/><circle cx="82" cy="26" r="3" fill="#1B2B4B"/>
+      <circle cx="54" cy="98" r="5" fill="rgba(255,255,255,.5)"/>
+      <circle cx="98" cy="54" r="5" fill="#3D7A56"/>
+    </svg>
+    <div>
+      <span class="h-brand">FinServe Analytics</span>
+      <span class="h-sub">AI-Powered RM Platform</span>
+    </div>
+  </div>
+  <div class="h-sep"></div>
+  <div class="h-title">RM Journey Map · Sofia Ferrari · AI Co-Pilot</div>
+  <div class="h-right">v1.0 · Feb 2026</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Journey Map</div>
+    <div class="hero-title">Sofia. Two clients.<br><em>Every answer in seconds.</em></div>
+    <div class="hero-desc">An Experienced RM navigates a full client session — a new policy purchase with Marco Bianchi and a claims dispute with Giulia Ferraro — with the AI Co-Pilot surfacing citations, comparisons, and compliance flags in real time.</div>
+    <div class="hero-pills">
+      <div class="hero-pill"><strong>Persona</strong> Sofia Ferrari · Experienced RM</div>
+      <div class="hero-pill"><strong>Channel</strong> Desktop Workspace</div>
+      <div class="hero-pill"><strong>Language</strong> Italian</div>
+      <div class="hero-pill"><strong>Docs</strong> 700–1,000 page product library</div>
+      <div class="hero-pill"><strong>Sessions</strong> Marco (new purchase) · Giulia (dispute)</div>
+    </div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend-bar">
+  <span style="font-size:11px;font-weight:500;color:var(--gray-400);letter-spacing:.1em;text-transform:uppercase;margin-right:4px;">Legend</span>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--navy);"></div>RM Action</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--gold);"></div>AI Co-Pilot Action</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--green);"></div>Positive Emotion</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--red);"></div>Pain Point</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--purple);"></div>Opportunity</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:var(--gold-pale);border:1px solid #EDD9A3;"></div>Citation</div>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap">
+<table class="journey">
+<thead>
+  <tr class="stage-header-row">
+
+    <!-- Row label header -->
+    <th class="stage-th row-label-th">
+      <span class="rl-brand">FinServe</span>
+      <span class="rl-sub">Journey Map</span>
+    </th>
+
+    <!-- Stage 1 -->
+    <th class="stage-th s1">
+      <div class="stage-num-small">Stage 01</div>
+      <div class="stage-name-th">Login &amp;<br>Orientation</div>
+      <div class="stage-sub-th">Morning start · ~2 min</div>
+      <div class="stage-bar"></div>
+    </th>
+
+    <!-- Stage 2 -->
+    <th class="stage-th s2">
+      <div class="stage-num-small">Stage 02</div>
+      <div class="stage-name-th">Dashboard<br>Review</div>
+      <div class="stage-sub-th">Queue + briefing · ~3 min</div>
+      <div class="stage-bar"></div>
+    </th>
+
+    <!-- Stage 3 -->
+    <th class="stage-th s3">
+      <div class="stage-num-small">Stage 03</div>
+      <div class="stage-name-th">Marco —<br>New Purchase</div>
+      <div class="stage-sub-th">Coverage query + comparison · ~12 min</div>
+      <div class="stage-bar"></div>
+    </th>
+
+    <!-- Stage 4 -->
+    <th class="stage-th s4">
+      <div class="stage-num-small">Stage 04</div>
+      <div class="stage-name-th">Marco —<br>Edge Case</div>
+      <div class="stage-sub-th">Partial disability follow-up · ~6 min</div>
+      <div class="stage-bar"></div>
+    </th>
+
+    <!-- Stage 5 -->
+    <th class="stage-th s5">
+      <div class="stage-num-small">Stage 05</div>
+      <div class="stage-name-th">Giulia —<br>Policy Dispute</div>
+      <div class="stage-sub-th">Claims conflict resolution · ~15 min</div>
+      <div class="stage-bar"></div>
+    </th>
+
+    <!-- Stage 6 -->
+    <th class="stage-th s6">
+      <div class="stage-num-small">Stage 06</div>
+      <div class="stage-name-th">Session<br>Wrap-up</div>
+      <div class="stage-sub-th">Notes + feedback · ~3 min</div>
+      <div class="stage-bar"></div>
+    </th>
+
+  </tr>
+</thead>
+<tbody>
+
+  <!-- ══ ROW 1: RM ACTIONS ══ -->
+  <tr>
+    <td class="row-label-cell">
+      <span class="rl-icon">👤</span>
+      <div class="rl-name">RM<br>Actions</div>
+      <div class="rl-desc">What Sofia does</div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Opens FinServe workspace via SSO</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Selects <strong>Experienced RM</strong> persona</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Reviews language setting — Italian confirmed</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Scans client queue — spots Marco &amp; Giulia</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Reviews session notes from prior interaction</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Opens Marco's workspace, initiates call</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Types query into Co-Pilot panel: product comparison request</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Reads structured comparison to Marco during live call</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Confirms Prodotto A recommendation</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Follows up: asks about partial disability after year 2</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Reviews AI answer with citations — checks §12.3</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Communicates edge-case terms to Marco; session closes</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Opens Giulia's workspace, reviews prior dispute notes</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Queries reimbursement conditions for her policy</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Presents side-by-side clause resolution to Giulia</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--red);"></div><div class="ci-text">Acknowledges compliance flag; escalates if needed</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Adds session notes to both client records</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Rates AI responses (thumbs up / down)</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--navy);"></div><div class="ci-text">Reviews daily query metrics on evaluation dashboard</div></div>
+      </div>
+    </td>
+  </tr>
+
+  <!-- ══ ROW 2: RM THOUGHTS ══ -->
+  <tr class="row-alt">
+    <td class="row-label-cell" style="background:var(--gray-50);">
+      <span class="rl-icon">💭</span>
+      <div class="rl-name">RM<br>Thoughts</div>
+      <div class="rl-desc">What Sofia is thinking</div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-quote navy">"Just need to get set up and pull up the queue before Marco calls."</div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-quote navy">"Giulia's dispute is still open — I need to be careful with the clause wording today."</div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-quote gold">"I would have spent 10 minutes searching for this. It just appeared."</div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-quote gold">"I wasn't sure about year-2 terms — the citation gives me confidence to state this clearly."</div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-quote red">"These two clauses contradict each other. I hope the AI can surface which one applies."</div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-quote green">"Both sessions handled cleanly. The AI flag on Giulia's case probably saved us from a complaint."</div>
+    </td>
+  </tr>
+
+  <!-- ══ ROW 3: CLIENT ACTIONS ══ -->
+  <tr>
+    <td class="row-label-cell">
+      <span class="rl-icon">🧑‍💼</span>
+      <div class="rl-name">Client<br>Actions</div>
+      <div class="rl-desc">Marco &amp; Giulia</div>
+    </td>
+
+    <td class="cell" style="color:var(--gray-400);font-style:italic;font-size:12px;">—</td>
+
+    <td class="cell" style="color:var(--gray-400);font-style:italic;font-size:12px;">—</td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gold);"></div><div class="ci-text"><strong>Marco</strong> asks to compare Prodotto A vs B for his risk profile (45y, medium risk)</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gold);"></div><div class="ci-text">Listens to structured comparison, asks for premium clarification</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gold);"></div><div class="ci-text">Confirms interest in Prodotto A</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gold);"></div><div class="ci-text"><strong>Marco</strong> raises concern: "What if I become partially disabled after year 2?"</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gold);"></div><div class="ci-text">Accepts explanation with cited clause — satisfied with clarity</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gold);"></div><div class="ci-text">Confirms purchase intent, call ends positively</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--purple);"></div><div class="ci-text"><strong>Giulia</strong> disputes reimbursement decision — references two conflicting clauses she found online</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--purple);"></div><div class="ci-text">Frustrated — feels previous RM gave wrong information</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--purple);"></div><div class="ci-text">Accepts side-by-side resolution; requests written confirmation</div></div>
+      </div>
+    </td>
+
+    <td class="cell" style="color:var(--gray-400);font-style:italic;font-size:12px;">—</td>
+  </tr>
+
+  <!-- ══ ROW 4: AI TOUCHPOINTS ══ -->
+  <tr class="row-alt">
+    <td class="row-label-cell" style="background:var(--gray-50);">
+      <span class="rl-icon">🤖</span>
+      <div class="rl-name">AI Co-Pilot<br>Actions</div>
+      <div class="rl-desc">System touchpoints</div>
+    </td>
+
+    <td class="cell">
+      <div class="chips">
+        <span class="chip chip-navy">Persona loaded</span>
+        <span class="chip chip-navy">Language: Italian</span>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="chips">
+        <span class="chip chip-navy">Session context primed</span>
+        <span class="chip chip-gold">Prior notes surfaced</span>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items" style="gap:8px;">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gold);"></div><div class="ci-text">RAG retrieval — Prodotto A vs B comparison in <strong>1.8s</strong></div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gold);"></div><div class="ci-text">Structured output: premium, coverage, exclusions side-by-side</div></div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="chips">
+          <span class="chip chip-gold">§ 18.2 — Tariffe</span>
+          <span class="chip chip-gold">§ 7.1 — Copertura</span>
+        </div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items" style="gap:8px;">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gold);"></div><div class="ci-text">Multi-turn context retained — AI references prior comparison</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gold);"></div><div class="ci-text">Edge-case clause retrieved and cited precisely</div></div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="chips">
+          <span class="chip chip-gold">§ 12.3 — Esclusioni</span>
+          <span class="chip chip-gold">§ 14.1 — Copertura</span>
+        </div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items" style="gap:8px;">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gold);"></div><div class="ci-text">Cross-references conflicting clauses — surfaces both with context</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--red);"></div><div class="ci-text"><strong>Compliance flag auto-surfaced</strong> — Clausola 9.4 conflict detected</div></div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="chips">
+          <span class="chip chip-gold">§ 9.4 — Clausole</span>
+          <span class="chip chip-gold">§ 22.1 — Rimborso</span>
+          <span class="chip chip-red">⚠ Compliance flag</span>
+        </div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items" style="gap:8px;">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--green);"></div><div class="ci-text">Evaluation dashboard updated — 148 queries, 96.4% accuracy</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--green);"></div><div class="ci-text">Feedback signal captured from Sofia's ratings</div></div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="chips">
+          <span class="chip chip-green">Feedback loop active</span>
+        </div>
+      </div>
+    </td>
+  </tr>
+
+  <!-- ══ ROW 5: EMOTION ══ -->
+  <tr>
+    <td class="row-label-cell">
+      <span class="rl-icon">📈</span>
+      <div class="rl-name">RM<br>Emotion</div>
+      <div class="rl-desc">Sofia's experience</div>
+    </td>
+
+    <!-- S1: Neutral/routine -->
+    <td class="cell">
+      <div class="emotion-wrap">
+        <div class="emotion-track">
+          <div class="emotion-fill" style="width:50%;background:var(--navy-lt);"></div>
+          <div class="emotion-node" style="left:50%;background:var(--navy);"></div>
+        </div>
+        <div class="emotion-label" style="color:var(--navy);">Neutral</div>
+        <div class="cell-quote navy" style="margin-top:4px;">Routine start — low friction</div>
+      </div>
+    </td>
+
+    <!-- S2: Focused -->
+    <td class="cell">
+      <div class="emotion-wrap">
+        <div class="emotion-track">
+          <div class="emotion-fill" style="width:60%;background:var(--gold-pale);"></div>
+          <div class="emotion-node" style="left:60%;background:var(--gold);"></div>
+        </div>
+        <div class="emotion-label" style="color:var(--gold);">Focused</div>
+        <div class="cell-quote gold" style="margin-top:4px;">Slight concern about Giulia's open case</div>
+      </div>
+    </td>
+
+    <!-- S3: Confident -->
+    <td class="cell">
+      <div class="emotion-wrap">
+        <div class="emotion-track">
+          <div class="emotion-fill" style="width:85%;background:var(--green-pale);"></div>
+          <div class="emotion-node" style="left:85%;background:var(--green);"></div>
+        </div>
+        <div class="emotion-label" style="color:var(--green);">Confident</div>
+        <div class="cell-quote green" style="margin-top:4px;">AI delivers instantly — no interruption to call flow</div>
+      </div>
+    </td>
+
+    <!-- S4: Assured -->
+    <td class="cell">
+      <div class="emotion-wrap">
+        <div class="emotion-track">
+          <div class="emotion-fill" style="width:90%;background:var(--green-pale);"></div>
+          <div class="emotion-node" style="left:90%;background:var(--green);"></div>
+        </div>
+        <div class="emotion-label" style="color:var(--green);">Assured</div>
+        <div class="cell-quote green" style="margin-top:4px;">Citation removes uncertainty — she states terms with authority</div>
+      </div>
+    </td>
+
+    <!-- S5: Tense → Relieved -->
+    <td class="cell">
+      <div class="emotion-wrap">
+        <div class="emotion-track">
+          <div class="emotion-fill" style="width:40%;background:var(--red-pale);"></div>
+          <div class="emotion-node" style="left:40%;background:var(--red);"></div>
+        </div>
+        <div class="emotion-label" style="color:var(--red);">Tense → Relieved</div>
+        <div class="cell-quote red" style="margin-top:4px;">Complex dispute — AI flag reduces risk of error</div>
+      </div>
+    </td>
+
+    <!-- S6: Satisfied -->
+    <td class="cell">
+      <div class="emotion-wrap">
+        <div class="emotion-track">
+          <div class="emotion-fill" style="width:95%;background:var(--green-pale);"></div>
+          <div class="emotion-node" style="left:95%;background:var(--green);"></div>
+        </div>
+        <div class="emotion-label" style="color:var(--green);">Satisfied</div>
+        <div class="cell-quote green" style="margin-top:4px;">Both sessions resolved — clean, fast, defensible</div>
+      </div>
+    </td>
+  </tr>
+
+  <!-- ══ ROW 6: PAIN POINTS ══ -->
+  <tr class="row-alt">
+    <td class="row-label-cell" style="background:var(--gray-50);">
+      <span class="rl-icon">⚡</span>
+      <div class="rl-name">Pain<br>Points</div>
+      <div class="rl-desc">Friction &amp; risk</div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--red);"></div><div class="ci-text">Without AI: manual login + product doc navigation eats first 5 minutes</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--red);"></div><div class="ci-text">Open disputes visible — anxiety about getting clause wording wrong</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--red);"></div><div class="ci-text"><strong>Without AI:</strong> 10–15 min manual search across 700+ page docs while client waits on hold</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--red);"></div><div class="ci-text">Risk of mis-quoting premium tiers under time pressure</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--red);"></div><div class="ci-text">Edge-case exclusions rarely indexed — would require specialist call without AI</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--red);"></div><div class="ci-text">Conflicting clauses are a genuine compliance risk — manual resolution is error-prone</div></div>
+        <div class="cell-item"><div class="ci-dot" style="background:var(--red);"></div><div class="ci-text">Without auto-flag: Sofia may not catch Clausola 9.4 conflict in time</div></div>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="cell-items">
+        <div class="cell-item"><div class="ci-dot" style="background:var(--gray-400);"></div><div class="ci-text">Manual note-taking is time-consuming — opportunity for auto-summary</div></div>
+      </div>
+    </td>
+  </tr>
+
+  <!-- ══ ROW 7: OPPORTUNITIES ══ -->
+  <tr>
+    <td class="row-label-cell">
+      <span class="rl-icon">💡</span>
+      <div class="rl-name">Design<br>Opportunities</div>
+      <div class="rl-desc">Where to invest</div>
+    </td>
+
+    <td class="cell">
+      <div class="opp navy">
+        <strong>One-click persona recall</strong>
+        <p>Remember last session's persona + language setting — zero config on return visits.</p>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="opp gold">
+        <strong>Smart pre-briefing</strong>
+        <p>Proactively surface unresolved flags and pending queries before Sofia opens a client record.</p>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="opp green">
+        <strong>Instant comparison cards</strong>
+        <p>Format product comparisons as scannable cards during live calls — minimize reading time.</p>
+      </div>
+      <div class="opp gold" style="margin-top:8px;">
+        <strong>Live call mode</strong>
+        <p>Reduced-chrome co-pilot view optimized for active phone sessions.</p>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="opp green">
+        <strong>Context threading</strong>
+        <p>Persist prior turn context across the full session — no need to re-state the client profile per query.</p>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="opp purple">
+        <strong>Proactive compliance surfacing</strong>
+        <p>Flag conflicting clauses before Sofia asks — not just when queried. Surface risk inline.</p>
+      </div>
+      <div class="opp red" style="margin-top:8px;">
+        <strong>Escalation workflow</strong>
+        <p>One-tap escalation path when a compliance flag is triggered — pre-populated with clause evidence.</p>
+      </div>
+    </td>
+
+    <td class="cell">
+      <div class="opp green">
+        <strong>Auto session summary</strong>
+        <p>Generate draft session notes from the co-pilot conversation log — Sofia reviews and saves.</p>
+      </div>
+      <div class="opp navy" style="margin-top:8px;">
+        <strong>Evaluation nudge</strong>
+        <p>Prompt for rating immediately after session close — when recall is sharpest.</p>
+      </div>
+    </td>
+  </tr>
+
+</tbody>
+</table>
+</div>
+
+<!-- SUMMARY -->
+<div class="summary">
+  <div class="sum-cell">
+    <div class="sum-eye">Time saved per session</div>
+    <div class="sum-val">10–15<span style="font-size:18px;font-weight:300;"> min</span></div>
+    <div class="sum-label">Manual search eliminated per product query</div>
+  </div>
+  <div class="sum-cell">
+    <div class="sum-eye">Response time</div>
+    <div class="sum-val">1.8<span style="font-size:18px;font-weight:300;"> sec</span></div>
+    <div class="sum-label">Average RAG retrieval across all query types</div>
+  </div>
+  <div class="sum-cell">
+    <div class="sum-eye">Compliance events caught</div>
+    <div class="sum-val">1<span style="font-size:18px;font-weight:300;"> flag</span></div>
+    <div class="sum-label">Auto-surfaced in Giulia's dispute — would have been missed manually</div>
+  </div>
+  <div class="sum-cell">
+    <div class="sum-eye">Design opportunities</div>
+    <div class="sum-val">8<span style="font-size:18px;font-weight:300;"> ideas</span></div>
+    <div class="sum-label">Across 6 journey stages — 3 high-priority</div>
+  </div>
+</div>
+
+</body>
+</html>
