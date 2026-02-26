@@ -59,7 +59,7 @@ export const CLIENTS = [
     id: 'billy',
     name: 'Billy Thompson',
     age: 48,
-    department: 'Orange County Police Department',
+    department: 'Sheriffs Special Officer Unit',
     yearsOfService: 15,
     retirementEligibility: '2 years',
     scenario: 'policy_concern',
