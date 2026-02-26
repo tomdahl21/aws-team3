@@ -33,17 +33,17 @@ function CoPilotInner() {
 
   const quickQueries = QUICK_QUERIES[client.scenario as keyof typeof QUICK_QUERIES] || [];
 
-  const handleSend = async () => {
-    if (!query.trim() || loading) return;
+  const handleSend = async (queryText?: string) => {
+    const textToSend = queryText || query.trim();
+    if (!textToSend || loading) return;
 
-    const userQuery = query.trim();
     setQuery('');
-    setMessages(prev => [...prev, { role: 'user', content: userQuery }]);
+    setMessages(prev => [...prev, { role: 'user', content: textToSend }]);
     setLoading(true);
 
     try {
       const payload: QueryRequest = {
-        query: userQuery,
+        query: textToSend,
         persona: 'new',
         clientId: client.id,
         jobTitle: client.department,
@@ -184,6 +184,8 @@ function CoPilotInner() {
                     key={idx}
                     className="btn btn-outline btn-sm"
                     style={{ fontSize: 12 }}
+                    onClick={() => handleSend(q.query)}
+                    disabled={loading}
                   >
                     {q.label}
                   </button>
