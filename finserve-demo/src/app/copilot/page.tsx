@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CLIENTS, QUICK_QUERIES } from '@/lib/mock-data';
@@ -14,6 +14,11 @@ function CoPilotInner() {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string; citations?: string[] }>>([]);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   if (!client) {
     return (
@@ -199,7 +204,7 @@ function CoPilotInner() {
             {messages.length === 0 ? (
               <div style={{ 
                 textAlign: 'center', 
-                padding: '60px 20px',
+                padding: '20px',
                 color: 'var(--gray-500)'
               }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}>💬</div>
@@ -250,6 +255,7 @@ function CoPilotInner() {
                     </div>
                   </div>
                 )}
+                <div ref={chatEndRef} />
               </div>
             )}
           </div>
