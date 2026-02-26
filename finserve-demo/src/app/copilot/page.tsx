@@ -38,8 +38,13 @@ function CoPilotInner() {
   // Show incoming call modal on client mount if no client param and not yet seen this session
   useEffect(() => {
     if (!clientParam && !sessionStorage.getItem('billyCallShown')) {
-      setShowIncomingCall(true);
-      sessionStorage.setItem('billyCallShown', 'true');
+      // Delay showing the incoming call by 2.5 seconds
+      const timer = setTimeout(() => {
+        setShowIncomingCall(true);
+        sessionStorage.setItem('billyCallShown', 'true');
+      }, 2500);
+      
+      return () => clearTimeout(timer);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -361,8 +366,7 @@ function CoPilotInner() {
       <div className="page-header-row fade-up">
         <div>
           <h1 className="page-title">AI Client Assistant</h1>
-          <p className="page-subtitle">Pension policy support for {client.name}</p>
-        </div>
+           </div>
         <Link href="/rm" className="btn btn-outline btn-sm">
           ← Back to Dashboard
         </Link>
@@ -422,7 +426,7 @@ function CoPilotInner() {
               </div>
 
               <div style={{ borderTop: '1px solid var(--gray-200)', paddingTop: 12, marginTop: 8 }}>
-                <div style={{ fontSize: 11, color: 'var(--gray-500)', marginBottom: 6 }}>Accrued Balances</div>
+                <div style={{ fontSize: 11, color: 'var(--gray-500)', marginBottom: 6 }}>Accrued as of</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                   <span style={{ fontSize: 13 }}>Sick Days</span>
                   <span style={{ fontSize: 13, fontWeight: 500 }}>{client.sickDaysBalance} days</span>
