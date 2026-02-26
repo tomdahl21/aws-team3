@@ -13,7 +13,12 @@ function CoPilotInner() {
   
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string; citations?: string[] }>>([]);
+  const [messages, setMessages] = useState<Array<{ 
+    role: 'user' | 'assistant'; 
+    content: string; 
+    citations?: string[];
+    confidence?: number;
+  }>>([]);
   const [sessionId, setSessionId] = useState<string | undefined>();
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -78,7 +83,8 @@ function CoPilotInner() {
       setMessages(prev => [...prev, { 
         role: 'assistant', 
         content: data.answer,
-        citations: data.sources?.map(s => s.source) || []
+        citations: data.sources?.map(s => s.source) || [],
+        confidence: data.validation?.confidence,
       }]);
     } catch (error) {
       setMessages(prev => [...prev, { 
@@ -238,15 +244,28 @@ function CoPilotInner() {
                       background: msg.role === 'user' ? 'var(--navy)' : 'var(--gray-100)',
                       color: msg.role === 'user' ? 'white' : 'var(--gray-900)',
                     }}>
+                      {msg.role === 'assistant' && msg.confidence !== undefined && (
+                        <div style={{ 
+                          fontSize: 11, 
+                          fontWeight: 700, 
+                          marginBottom: 8,
+                          color: msg.confidence >= 0.9 ? 'var(--green)' : msg.confidence >= 0.7 ? '#D97706' : 'var(--red)'
+                        }}>
+                          Confidence: {(msg.confidence * 100).toFixed(0)}%
+                        </div>
+                      )}
                       <div style={{ fontSize: 14, lineHeight: 1.5 }}>{msg.content}</div>
                       {msg.citations && msg.citations.length > 0 && (
-                        <div style={{ marginTop: 8, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                          {msg.citations.map((citation, i) => (
-                            <span key={i} className="badge badge-gold" style={{ fontSize: 11 }}>
-                              {citation}
-                            </span>
-                          ))}
-                        </div>
+                        <>
+                          <br />
+                          <div style={{ marginTop: 8, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                            {msg.citations.map((citation, i) => (
+                              <span key={i} className="badge badge-gold" style={{ fontSize: 11 }}>
+                                {citation}
+                              </span>
+                            ))}
+                          </div>
+                        </>
                       )}
                     </div>
                   </div>
