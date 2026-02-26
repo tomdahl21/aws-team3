@@ -1073,7 +1073,7 @@ SSO -- 27 ARTICLE IV LEAVE PROVISIONS
 Section 1. Healthcare Leave A. Healthcare Leave Accrual
 
 1. During the first three (3) years of employment, an employee shall
-   earn .0347 hours of healthcare leave with pay for each paid hour in
+   earn .0147 hours of healthcare leave with pay for each paid hour in
    a regularly scheduled workweek or period to a maximum of eighty (80)
    hours in a pay period (approximately sev enty-two \[72\] hours per
    year).
@@ -1084,7 +1084,7 @@ Section 1. Healthcare Leave A. Healthcare Leave Accrual
 ```
 
 (6240) regularly scheduled hours, approximately three (3) years, the
-       employee shall earn .0462 hours of healthcare leave with pay fo r
+       employee shall earn .0562 hours of healthcare leave with pay fo r
        each paid hour in a regularly scheduled work period to a maximum
        of eighty
 (6241) hours in a pay period (appr oximately ninety-six \[96\] hours per
