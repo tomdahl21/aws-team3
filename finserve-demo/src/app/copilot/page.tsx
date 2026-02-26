@@ -26,7 +26,7 @@ function CoPilotInner() {
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
-  const [showClientContext, setShowClientContext] = useState(true);
+  const [showClientContext, setShowClientContext] = useState(false);
   const [showClientDropdown, setShowClientDropdown] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -38,8 +38,16 @@ function CoPilotInner() {
   // Show incoming call modal on client mount if no client param and not yet seen this session
   useEffect(() => {
     if (!clientParam && !sessionStorage.getItem('billyCallShown')) {
-      setShowIncomingCall(true);
-      sessionStorage.setItem('billyCallShown', 'true');
+      // Delay showing the incoming call by 2.5 seconds
+      const timer = setTimeout(() => {
+        setShowIncomingCall(true);
+        sessionStorage.setItem('billyCallShown', 'true');
+      }, 2500);
+      
+      return () => clearTimeout(timer);
+    } else if (clientParam) {
+      // If client param exists, show context immediately
+      setShowClientContext(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -117,6 +125,7 @@ function CoPilotInner() {
     setTimeout(() => {
       setLoadingProfile(false);
       setShowIncomingCall(false);
+      setShowClientContext(true); // Show client context after accepting call
     }, 1500);
   };
 
@@ -355,8 +364,7 @@ function CoPilotInner() {
       <div className="page-header-row fade-up">
         <div>
           <h1 className="page-title">AI Client Assistant</h1>
-          <p className="page-subtitle">Pension policy support for {client.name}</p>
-        </div>
+           </div>
         <Link href="/rm" className="btn btn-outline btn-sm">
           ← Back to Dashboard
         </Link>
@@ -416,7 +424,7 @@ function CoPilotInner() {
               </div>
 
               <div style={{ borderTop: '1px solid var(--gray-200)', paddingTop: 12, marginTop: 8 }}>
-                <div style={{ fontSize: 11, color: 'var(--gray-500)', marginBottom: 6 }}>Accrued Balances</div>
+                <div style={{ fontSize: 11, color: 'var(--gray-500)', marginBottom: 6 }}>Accrued as of</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                   <span style={{ fontSize: 13 }}>Sick Days</span>
                   <span style={{ fontSize: 13, fontWeight: 500 }}>{client.sickDaysBalance} days</span>

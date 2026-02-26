@@ -29,31 +29,6 @@ function AnimatedNumber({ value, duration = 1000 }: { value: number; duration?: 
   return <>{count}</>;
 }
 
-function AnimatedPercentage({ value, duration = 1000 }: { value: string; duration?: number }) {
-  const numValue = parseFloat(value);
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let startTime: number;
-    let animationFrame: number;
-
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-      
-      setCount(progress * numValue);
-
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      }
-    };
-
-    animationFrame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrame);
-  }, [numValue, duration]);
-
-  return <>{count.toFixed(1)}%</>;
-}
 
 export default function DashboardPage() {
   const [activatedClientIds, setActivatedClientIds] = useState<string[]>([]);
@@ -93,7 +68,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Metrics row */}
-      <div className="grid-4 fade-up-1" style={{ marginBottom: 28 }}>
+      <div className="grid-3 fade-up-1" style={{ marginBottom: 28 }}>
         <div className="stat-card navy">
           <div className="stat-label">Calls Today</div>
           <div className="stat-value">
@@ -106,13 +81,7 @@ export default function DashboardPage() {
           <div className="stat-value">{DASHBOARD_METRICS.avgResponseTime}</div>
           <div className="stat-note">target: &lt;2s ✓</div>
         </div>
-        <div className="stat-card green">
-          <div className="stat-label">Accuracy</div>
-          <div className="stat-value">
-            <AnimatedPercentage value={DASHBOARD_METRICS.accuracyRate} />
-          </div>
-          <div className="stat-delta up">↑ 0.8% this week</div>
-        </div>
+
         <div className="stat-card navy">
           <div className="stat-label">Satisfaction</div>
           <div className="stat-value">
