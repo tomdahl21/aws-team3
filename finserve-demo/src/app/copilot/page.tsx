@@ -424,7 +424,7 @@ function CoPilotInner() {
               </div>
 
               <div style={{ borderTop: '1px solid var(--gray-200)', paddingTop: 12, marginTop: 8 }}>
-                <div style={{ fontSize: 11, color: 'var(--gray-500)', marginBottom: 6 }}>Accrued as of</div>
+                <div style={{ fontSize: 11, color: 'var(--gray-500)', marginBottom: 6 }}>Accrued as of today</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                   <span style={{ fontSize: 13 }}>Sick Days</span>
                   <span style={{ fontSize: 13, fontWeight: 500 }}>{client.sickDaysBalance} days</span>
