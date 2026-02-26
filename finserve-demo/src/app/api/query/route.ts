@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { retrieve, detectComplianceConflicts, getPersonaSystemPrompt, buildRagPrompt, extractCitations, type PersonaKey } from '@/lib/rag';
-import { generateText } from '@/lib/bedrock';
-import { CLIENTS } from '@/lib/mock-data';
+
+const BACKEND_URL = process.env.BACKEND_RAG_URL || 'https://YOUR_API_ID.execute-api.us-east-1.amazonaws.com/Prod/rag';
 
 export interface QueryRequest {
   query: string;
-  persona: PersonaKey;
-  clientId: string;
+  persona?: string;
+  clientId?: string;
+  jobTitle?: string;
+  yearsOfService?: number;
+  state?: string;
+  county?: string;
+  sessionId?: string;
 }
 
 export interface QueryResponse {
@@ -32,43 +36,49 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'query is required' }, { status: 400 });
     }
 
-    const persona = (body.persona ?? 'experienced') as PersonaKey;
-    const clientId = body.clientId ?? '';
-    const query = body.query.trim();
+    // Build context-enriched query with client information
+    const contextParts = [];
+    if (body.jobTitle) contextParts.push(`Job Title: ${body.jobTitle}`);
+    if (body.yearsOfService) contextParts.push(`Years of Service: ${body.yearsOfService}`);
+    if (body.state) contextParts.push(`State: ${body.state}`);
+    if (body.county) contextParts.push(`County: ${body.county}`);
+    
+    const enrichedQuery = contextParts.length > 0
+      ? `${contextParts.join(', ')}. ${body.query}`
+      : body.query;
 
-    // Look up client context for the prompt
-    const client = CLIENTS.find((c) => c.id === clientId);
-    const clientContext = client
-      ? `Client: ${client.name}, Age: ${client.age}, Department: ${client.department}, State: ${client.state}, County: ${client.county}, Years of Service: ${client.yearsOfService}, Scenario: ${client.scenarioLabel}`
-      : undefined;
+    // Call backend RAG API
+    const backendPayload = {
+      action: 'query',
+      query: enrichedQuery,
+      session_id: body.sessionId,
+    };
 
-    // 1. Retrieve relevant document chunks
-    const retrieved = await retrieve(query, 4);
+    const backendResponse = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(backendPayload),
+    });
 
-    // 2. Detect compliance conflicts in retrieved chunks
-    const complianceFlags = detectComplianceConflicts(retrieved);
+    if (!backendResponse.ok) {
+      throw new Error(`Backend API returned ${backendResponse.status}`);
+    }
 
-    // 3. Build the prompt
-    const userMessage = buildRagPrompt(query, retrieved, clientContext);
-    const systemPrompt = getPersonaSystemPrompt(persona);
+    const backendData = await backendResponse.json();
 
-    // 4. Generate response via Bedrock
-    const responseText = await generateText(
-      [{ role: 'user', content: userMessage }],
-      { system: systemPrompt, maxTokens: 1024, temperature: 0.2 }
-    );
-
-    // 5. Extract citations from response
-    const citations = extractCitations(responseText, retrieved);
+    if (!backendData.success) {
+      throw new Error(backendData.error || 'Backend query failed');
+    }
 
     const responseTimeMs = Date.now() - start;
 
+    // Transform backend response to frontend format
     const result: QueryResponse = {
-      response: responseText,
-      citations,
-      complianceFlags,
+      response: backendData.answer || '',
+      citations: backendData.sources?.map((s: any) => s.source) || [],
+      complianceFlags: [],
       responseTimeMs,
-      retrievedSections: retrieved.map((r) => `${r.chunk.section} — ${r.chunk.product}`),
+      retrievedSections: backendData.sources?.map((s: any) => s.source) || [],
     };
 
     return NextResponse.json(result);
@@ -76,15 +86,10 @@ export async function POST(req: NextRequest) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('[/api/query] Error:', message);
 
-    // Provide a clear error message to help with debugging
     return NextResponse.json(
       {
         error: message,
-        hint: message.includes('credentials')
-          ? 'AWS credentials not configured. Add AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN to .env.local'
-          : message.includes('ValidationException') || message.includes('ResourceNotFoundException')
-          ? 'Bedrock model access issue. Check that the model ID is enabled in your AWS account for us-east-1'
-          : 'See server console for details',
+        hint: 'Failed to communicate with backend RAG service',
       },
       { status: 500 }
     );

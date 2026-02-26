@@ -1,14 +1,24 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CLIENTS, QUICK_QUERIES } from '@/lib/mock-data';
+import type { QueryRequest, QueryResponse } from '@/app/api/query/route';
 
 function CoPilotInner() {
   const searchParams = useSearchParams();
   const clientId = searchParams.get('client') ?? CLIENTS[0]?.id ?? 'billy';
   const client = CLIENTS.find((c) => c.id === clientId) ?? CLIENTS[0];
+  
+  const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string; citations?: string[] }>>([]);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   if (!client) {
     return (
@@ -27,6 +37,49 @@ function CoPilotInner() {
   }
 
   const quickQueries = QUICK_QUERIES[client.scenario as keyof typeof QUICK_QUERIES] || [];
+
+  const handleSend = async (queryText?: string) => {
+    const textToSend = queryText || query.trim();
+    if (!textToSend || loading) return;
+
+    setQuery('');
+    setMessages(prev => [...prev, { role: 'user', content: textToSend }]);
+    setLoading(true);
+
+    try {
+      const payload: QueryRequest = {
+        query: textToSend,
+        persona: 'new',
+        clientId: client.id,
+        jobTitle: client.department,
+        yearsOfService: client.yearsOfService,
+        state: client.state,
+        county: client.county,
+      };
+
+      const res = await fetch('/api/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error('API request failed');
+
+      const data: QueryResponse = await res.json();
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: data.response,
+        citations: data.citations 
+      }]);
+    } catch (error) {
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'Sorry, there was an error processing your request.' 
+      }]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="page-container">
@@ -136,6 +189,8 @@ function CoPilotInner() {
                     key={idx}
                     className="btn btn-outline btn-sm"
                     style={{ fontSize: 12 }}
+                    onClick={() => handleSend(q.query)}
+                    disabled={loading}
                   >
                     {q.label}
                   </button>
@@ -146,19 +201,63 @@ function CoPilotInner() {
 
           {/* Chat Thread */}
           <div style={{ flex: 1, padding: 20, overflowY: 'auto' }}>
-            <div style={{ 
-              textAlign: 'center', 
-              padding: '60px 20px',
-              color: 'var(--gray-500)'
-            }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>💬</div>
-              <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 8 }}>
-                AI Client Assistant Ready
+            {messages.length === 0 ? (
+              <div style={{ 
+                textAlign: 'center', 
+                padding: '20px',
+                color: 'var(--gray-500)'
+              }}>
+                <div style={{ fontSize: 48, marginBottom: 16 }}>💬</div>
+                <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 8 }}>
+                  AI Client Assistant Ready
+                </div>
+                <div style={{ fontSize: 14 }}>
+                  Ask a question about {client.name}'s pension benefits or California policy changes
+                </div>
               </div>
-              <div style={{ fontSize: 14 }}>
-                Ask a question about {client.name}'s pension benefits or California policy changes
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {messages.map((msg, idx) => (
+                  <div key={idx} style={{ 
+                    display: 'flex', 
+                    justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' 
+                  }}>
+                    <div style={{
+                      maxWidth: '80%',
+                      padding: 12,
+                      borderRadius: 8,
+                      background: msg.role === 'user' ? 'var(--navy)' : 'var(--gray-100)',
+                      color: msg.role === 'user' ? 'white' : 'var(--gray-900)',
+                    }}>
+                      <div style={{ fontSize: 14, lineHeight: 1.5 }}>{msg.content}</div>
+                      {msg.citations && msg.citations.length > 0 && (
+                        <div style={{ marginTop: 8, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                          {msg.citations.map((citation, i) => (
+                            <span key={i} className="badge badge-gold" style={{ fontSize: 11 }}>
+                              {citation}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {loading && (
+                  <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                    <div style={{
+                      padding: 12,
+                      borderRadius: 8,
+                      background: 'var(--gray-100)',
+                      color: 'var(--gray-600)',
+                      fontSize: 14,
+                    }}>
+                      Thinking...
+                    </div>
+                  </div>
+                )}
+                <div ref={chatEndRef} />
               </div>
-            </div>
+            )}
           </div>
 
           {/* Input Area */}
@@ -169,9 +268,18 @@ function CoPilotInner() {
                 placeholder="Ask about pension policies, retirement eligibility, or policy changes..."
                 className="input"
                 style={{ flex: 1 }}
+                value={query || ''}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                disabled={loading}
               />
-              <button className="btn btn-primary">
-                Send
+              <button 
+                className="btn btn-primary"
+                onClick={handleSend}
+                disabled={loading || !query.trim()}
+                style={{ minWidth: 100, padding: '10px 24px' }}
+              >
+                {loading ? 'Sending...' : 'Send'}
               </button>
             </div>
             <div style={{ fontSize: 11, color: 'var(--gray-500)', marginTop: 8 }}>
