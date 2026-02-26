@@ -48,9 +48,15 @@ function CoPilotInner() {
     setLoading(true);
 
     try {
+      // For first query, append client context
+      let finalQuery = textToSend;
+      if (!sessionId) {
+        finalQuery = `${textToSend} (Client context: ${client.name}, ${client.department}, ${client.yearsOfService} years of service, ${client.state}, ${client.county})`;
+      }
+
       const payload: QueryRequest = {
         action: 'query',
-        query: textToSend,
+        query: finalQuery,
         session_id: sessionId,
       };
 
