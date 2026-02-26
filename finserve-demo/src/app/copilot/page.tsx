@@ -26,7 +26,7 @@ function CoPilotInner() {
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
-  const [showClientContext, setShowClientContext] = useState(true);
+  const [showClientContext, setShowClientContext] = useState(false);
   const [showClientDropdown, setShowClientDropdown] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -45,6 +45,9 @@ function CoPilotInner() {
       }, 2500);
       
       return () => clearTimeout(timer);
+    } else if (clientParam) {
+      // If client param exists, show context immediately
+      setShowClientContext(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -122,6 +125,7 @@ function CoPilotInner() {
     setTimeout(() => {
       setLoadingProfile(false);
       setShowIncomingCall(false);
+      setShowClientContext(true); // Show client context after accepting call
     }, 1500);
   };
 
