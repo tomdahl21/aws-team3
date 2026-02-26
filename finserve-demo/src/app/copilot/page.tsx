@@ -277,6 +277,7 @@ function CoPilotInner() {
                 className="btn btn-primary"
                 onClick={handleSend}
                 disabled={loading || !query.trim()}
+                style={{ minWidth: 100, padding: '10px 24px' }}
               >
                 {loading ? 'Sending...' : 'Send'}
               </button>
