@@ -7,6 +7,10 @@ export interface QueryRequest {
   query: string;
   persona: PersonaKey;
   clientId: string;
+  jobTitle: string;
+  yearsOfService: number;
+  state: string;
+  county: string;
 }
 
 export interface QueryResponse {
@@ -38,8 +42,15 @@ export async function POST(req: NextRequest) {
 
     // Look up client context for the prompt
     const client = CLIENTS.find((c) => c.id === clientId);
-    const clientContext = client
-      ? `Client: ${client.name}, Age: ${client.age}, Department: ${client.department}, State: ${client.state}, County: ${client.county}, Years of Service: ${client.yearsOfService}, Scenario: ${client.scenarioLabel}`
+    
+    // Use provided fields or fall back to client lookup
+    const jobTitle = body.jobTitle ?? client?.department;
+    const yearsOfService = body.yearsOfService ?? client?.yearsOfService;
+    const state = body.state ?? client?.state;
+    const county = body.county ?? client?.county;
+    
+    const clientContext = jobTitle || yearsOfService || state || county
+      ? `Job Title: ${jobTitle ?? 'N/A'}, Years of Service: ${yearsOfService ?? 'N/A'}, State: ${state ?? 'N/A'}, County: ${county ?? 'N/A'}`
       : undefined;
 
     // 1. Retrieve relevant document chunks
