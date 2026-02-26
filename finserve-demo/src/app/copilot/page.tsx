@@ -14,6 +14,7 @@ function CoPilotInner() {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string; citations?: string[] }>>([]);
+  const [sessionId, setSessionId] = useState<string | undefined>();
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,13 +49,9 @@ function CoPilotInner() {
 
     try {
       const payload: QueryRequest = {
+        action: 'query',
         query: textToSend,
-        persona: 'new',
-        clientId: client.id,
-        jobTitle: client.department,
-        yearsOfService: client.yearsOfService,
-        state: client.state,
-        county: client.county,
+        session_id: sessionId,
       };
 
       const res = await fetch('/api/query', {
@@ -66,10 +63,16 @@ function CoPilotInner() {
       if (!res.ok) throw new Error('API request failed');
 
       const data: QueryResponse = await res.json();
+      
+      // Update session ID for conversation continuity
+      if (data.session_id) {
+        setSessionId(data.session_id);
+      }
+      
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: data.response,
-        citations: data.citations 
+        content: data.answer,
+        citations: data.sources?.map(s => s.source) || []
       }]);
     } catch (error) {
       setMessages(prev => [...prev, { 
