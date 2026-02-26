@@ -19,7 +19,7 @@ const Logo = () => (
 export default function TopBar() {
   const pathname = usePathname();
 
-  const isRm = pathname.startsWith('/rm') || pathname.startsWith('/copilot') || pathname.startsWith('/policy-updates');
+  const isRm = pathname.startsWith('/rm') || pathname.startsWith('/copilot') || pathname.startsWith('/policy-updates') || pathname.startsWith('/accounts');
   const isLanding = pathname === '/';
 
   const isActive = (href: string) => {
@@ -52,6 +52,9 @@ export default function TopBar() {
             <Link href="/copilot" className={`topbar-link ${isActive('/copilot') ? 'active' : ''}`}>
               AI Client Assistant
             </Link>
+            <Link href="/accounts" className={`topbar-link ${isActive('/accounts') ? 'active' : ''}`}>
+              Accounts
+            </Link>
             <Link href="/policy-updates" className={`topbar-link ${isActive('/policy-updates') ? 'active' : ''}`}>
               Policy Updates
             </Link>
@@ -70,7 +73,10 @@ export default function TopBar() {
           {isRm && (
             <>
               <span className="topbar-user">Sophia Chen</span>
-              <div className="topbar-avatar">SC</div>
+              <div className="topbar-avatar" style={{ padding: 0, overflow: 'hidden' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/sophia.png" alt="Sophia Chen" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+              </div>
             </>
           )}
           {isLanding && (
