@@ -54,7 +54,7 @@ button { font-family: var(--font-body); cursor: pointer; border: none; backgroun
 /* ── TOPBAR ── */
 .topbar {
   background: var(--navy);
-  height: 68px;
+  height: 80px;
   display: flex;
   align-items: center;
   padding: 0 32px;
@@ -75,13 +75,13 @@ button { font-family: var(--font-body); cursor: pointer; border: none; backgroun
 .topbar-logo { display: flex; align-items: center; gap: 10px; margin-right: 16px; }
 .topbar-logo-text .t-brand {
   font-family: var(--font-display);
-  font-size: 15px; font-weight: 600; color: #fff;
+  font-size: 17px; font-weight: 600; color: #fff;
   display: block; line-height: 1;
 }
 .topbar-logo-text .t-sub {
-  font-size: 8px; letter-spacing: 0.2em;
+  font-size: 9px; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--gold-lt);
-  display: block; margin-top: 2px;
+  display: block; margin-top: 3px;
 }
 .topbar-nav { display: flex; gap: 2px; }
 .topbar-link {

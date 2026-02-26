@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const Logo = () => (
-  <svg width="28" height="28" viewBox="0 0 108 108" fill="none" aria-hidden="true">
+  <svg width="38" height="38" viewBox="0 0 108 108" fill="none" aria-hidden="true">
     <path d="M54 98 A44 44 0 1 1 98 54" stroke="rgba(255,255,255,0.9)" strokeWidth="5.5" fill="none" strokeLinecap="round"/>
     <path d="M54 84 A30 30 0 1 1 64.3 25.8" stroke="#3D7A56" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.8"/>
     <line x1="22" y1="86" x2="82" y2="26" stroke="rgba(255,255,255,0.65)" strokeWidth="2.5" strokeLinecap="round"/>
@@ -35,7 +35,7 @@ export default function TopBar() {
         <div className="topbar-logo-text">
           <span className="t-brand">FinServe Analytics</span>
           <span className="t-sub">
-            {isRm ? 'Pension Management Platform' : 'AI-Powered Pension Support'}
+            {isRm ? 'Financial & Pension Management' : 'AI-Powered Pension Support'}
           </span>
         </div>
       </Link>
