@@ -3,14 +3,16 @@
 import { Suspense, useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { CLIENTS, QUICK_QUERIES } from '@/lib/mock-data';
+import { CLIENTS, QUICK_QUERIES, PENDING_CALL_CLIENT_ID } from '@/lib/mock-data';
 import type { QueryRequest, QueryResponse } from '@/app/api/query/route';
 
 function CoPilotInner() {
   const searchParams = useSearchParams();
-  const clientId = searchParams.get('client') ?? CLIENTS[0]?.id ?? 'billy';
+  const clientParam = searchParams.get('client');
+  // No client param = Billy is calling in; with a param = open that client directly
+  const clientId = clientParam ?? PENDING_CALL_CLIENT_ID;
   const client = CLIENTS.find((c) => c.id === clientId) ?? CLIENTS[0];
-  
+
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Array<{ 
@@ -20,11 +22,103 @@ function CoPilotInner() {
     confidence?: number;
   }>>([]);
   const [sessionId, setSessionId] = useState<string | undefined>();
+  const [showIncomingCall, setShowIncomingCall] = useState(false);
+  const [loadingProfile, setLoadingProfile] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognition, setRecognition] = useState<any>(null);
+  const [showClientContext, setShowClientContext] = useState(true);
+  const [showClientDropdown, setShowClientDropdown] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Show incoming call modal on client mount if no client param and not yet seen this session
+  useEffect(() => {
+    if (!clientParam && !sessionStorage.getItem('billyCallShown')) {
+      setShowIncomingCall(true);
+      sessionStorage.setItem('billyCallShown', 'true');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Initialize Web Speech API
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition;
+      const recognitionInstance = new SpeechRecognition();
+      recognitionInstance.continuous = false;
+      recognitionInstance.interimResults = false;
+      recognitionInstance.lang = 'en-US';
+
+      recognitionInstance.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setQuery(transcript);
+        setIsRecording(false);
+      };
+
+      recognitionInstance.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        setIsRecording(false);
+      };
+
+      recognitionInstance.onend = () => {
+        setIsRecording(false);
+      };
+
+      setRecognition(recognitionInstance);
+    }
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowClientDropdown(false);
+      }
+    };
+
+    if (showClientDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showClientDropdown]);
+
+  const toggleRecording = () => {
+    if (!recognition) {
+      alert('Voice input is not supported in your browser. Please use Chrome, Edge, or Safari.');
+      return;
+    }
+
+    if (isRecording) {
+      recognition.stop();
+      setIsRecording(false);
+    } else {
+      recognition.start();
+      setIsRecording(true);
+    }
+  };
+
+  const handleAcceptCall = () => {
+    setLoadingProfile(true);
+    // Mark client as activated so the dashboard shows their record on return
+    const stored = localStorage.getItem('activatedClients');
+    const ids: string[] = stored ? JSON.parse(stored) : [];
+    if (!ids.includes(client.id)) ids.push(client.id);
+    localStorage.setItem('activatedClients', JSON.stringify(ids));
+    localStorage.setItem('lastActivatedId', client.id);
+    localStorage.setItem('lastActivatedAt', Date.now().toString());
+
+    setTimeout(() => {
+      setLoadingProfile(false);
+      setShowIncomingCall(false);
+    }, 1500);
+  };
 
   if (!client) {
     return (
@@ -43,6 +137,169 @@ function CoPilotInner() {
   }
 
   const quickQueries = QUICK_QUERIES[client.scenario as keyof typeof QUICK_QUERIES] || [];
+
+  // Show incoming call alert
+  if (showIncomingCall) {
+    return (
+      <div className="page-container">
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.85)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999,
+          animation: 'fadeIn 0.3s ease-in',
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: 16,
+            padding: 48,
+            maxWidth: 500,
+            width: '90%',
+            textAlign: 'center',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+            animation: 'slideUp 0.4s ease-out',
+          }}>
+            {/* Phone icon with pulse animation */}
+            <div style={{
+              width: 80,
+              height: 80,
+              margin: '0 auto 24px',
+              background: 'var(--green)',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              animation: 'pulse 2s infinite',
+            }}>
+              <span style={{ fontSize: 40 }}>📞</span>
+            </div>
+
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 28,
+              fontWeight: 600,
+              color: 'var(--navy)',
+              marginBottom: 12,
+            }}>
+              Incoming Call
+            </h2>
+
+            <div style={{
+              fontSize: 18,
+              fontWeight: 500,
+              color: 'var(--gray-800)',
+              marginBottom: 8,
+            }}>
+              {client.name}
+            </div>
+
+            <div style={{
+              fontSize: 14,
+              color: 'var(--gray-600)',
+              marginBottom: 8,
+            }}>
+              {client.phone}
+            </div>
+
+            <div style={{
+              fontSize: 13,
+              color: 'var(--gray-500)',
+              marginBottom: 32,
+            }}>
+              {client.department}
+            </div>
+
+            {loadingProfile ? (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 16,
+              }}>
+                <div style={{
+                  width: 40,
+                  height: 40,
+                  border: '4px solid var(--gray-200)',
+                  borderTop: '4px solid var(--navy)',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite',
+                }}></div>
+                <div style={{ fontSize: 14, color: 'var(--gray-600)' }}>
+                  Loading client profile...
+                </div>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+                <Link href="/rm" className="btn btn-outline" style={{ minWidth: 140, padding: '14px 28px', fontSize: 16 }}>
+                  Decline
+                </Link>
+                <button
+                  onClick={handleAcceptCall}
+                  className="btn btn-primary"
+                  style={{
+                    minWidth: 140,
+                    padding: '14px 28px',
+                    fontSize: 16,
+                    background: 'var(--green)',
+                    borderColor: 'var(--green)',
+                  }}
+                >
+                  Accept Call
+                </button>
+              </div>
+            )}
+          </div>
+
+          <style jsx>{`
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+            @keyframes slideUp {
+              from {
+                opacity: 0;
+                transform: translateY(30px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+            @keyframes pulse {
+              0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(45, 94, 64, 0.7);
+              }
+              50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(45, 94, 64, 0);
+              }
+            }
+            @keyframes spin {
+              from { transform: rotate(0deg); }
+              to { transform: rotate(360deg); }
+            }
+            @keyframes pulse-dot {
+              0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+              }
+              50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+              }
+            }
+          `}</style>
+        </div>
+      </div>
+    );
+  }
 
   const handleSend = async (queryText?: string) => {
     const textToSend = queryText || query.trim();
@@ -96,6 +353,8 @@ function CoPilotInner() {
     }
   };
 
+  const handleSendClick = () => handleSend();
+
   return (
     <div className="page-container">
       {/* Page header */}
@@ -110,13 +369,22 @@ function CoPilotInner() {
       </div>
 
       {/* Main content */}
-      <div style={{ display: 'grid', gridTemplateColumns: '380px 1fr', gap: 16 }} className="fade-up-1">
+      <div style={{ display: 'grid', gridTemplateColumns: showClientContext ? '380px 1fr' : '1fr', gap: 16 }} className="fade-up-1">
         
         {/* Client Profile Sidebar */}
-        <div className="card">
-          <div className="card-header">
-            <div className="card-title">Client Profile</div>
-          </div>
+        {showClientContext && (
+          <div className="card">
+            <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="card-title">Client Profile</div>
+              <button
+                onClick={() => setShowClientContext(false)}
+                className="btn btn-outline btn-sm"
+                style={{ padding: '4px 12px', fontSize: 12 }}
+                title="Close client context"
+              >
+                ✕
+              </button>
+            </div>
           <div className="card-body">
             <div style={{ marginBottom: 20 }}>
               <div style={{ fontSize: 24, fontWeight: 600, color: 'var(--navy)', marginBottom: 4 }}>
@@ -184,13 +452,105 @@ function CoPilotInner() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Chat Interface */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 200px)' }}>
           <div className="card-header">
-            <div>
-              <div className="card-title">Ask a Question</div>
-              <div className="card-subtitle">Get instant answers about California pension policies</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+              <div>
+                <div className="card-title">Ask a Question</div>
+                <div className="card-subtitle">
+                  {showClientContext 
+                    ? `Get instant answers about California pension policies`
+                    : `General pension policy questions - Account-wide context`
+                  }
+                </div>
+              </div>
+              {!showClientContext && (
+                <div style={{ position: 'relative' }} ref={dropdownRef}>
+                  <button
+                    onClick={() => setShowClientDropdown(!showClientDropdown)}
+                    className="btn btn-outline btn-sm"
+                    style={{ fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}
+                  >
+                    Recent Clients
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                  
+                  {showClientDropdown && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: 0,
+                      marginTop: 8,
+                      background: 'white',
+                      border: '1px solid var(--gray-200)',
+                      borderRadius: 'var(--radius-md)',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                      minWidth: 280,
+                      zIndex: 1000,
+                      overflow: 'hidden',
+                    }}>
+                      <div style={{
+                        padding: '8px 12px',
+                        borderBottom: '1px solid var(--gray-200)',
+                        fontSize: 11,
+                        fontWeight: 600,
+                        color: 'var(--gray-500)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                      }}>
+                        Recent Clients
+                      </div>
+                      {CLIENTS.map((c) => (
+                        <Link
+                          key={c.id}
+                          href={`/copilot?client=${c.id}`}
+                          onClick={() => {
+                            setShowClientContext(true);
+                            setShowClientDropdown(false);
+                          }}
+                          style={{
+                            display: 'block',
+                            padding: '12px 16px',
+                            borderBottom: '1px solid var(--gray-100)',
+                            textDecoration: 'none',
+                            color: 'inherit',
+                            transition: 'background 0.15s',
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.background = 'var(--gray-50)'}
+                          onMouseLeave={(e) => e.currentTarget.style.background = 'white'}
+                        >
+                          <div style={{
+                            fontSize: 14,
+                            fontWeight: 500,
+                            color: 'var(--navy)',
+                            marginBottom: 2,
+                          }}>
+                            {c.name}
+                          </div>
+                          <div style={{
+                            fontSize: 12,
+                            color: 'var(--gray-600)',
+                            marginBottom: 4,
+                          }}>
+                            {c.department}
+                          </div>
+                          <div style={{
+                            fontSize: 11,
+                            color: 'var(--gray-500)',
+                          }}>
+                            {c.yearsOfService} years • {c.retirementEligibility}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -301,9 +661,50 @@ function CoPilotInner() {
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 disabled={loading}
               />
+              <button
+                className="btn btn-outline"
+                onClick={toggleRecording}
+                disabled={loading}
+                style={{
+                  minWidth: 50,
+                  padding: '10px 16px',
+                  background: isRecording ? 'var(--red)' : 'white',
+                  borderColor: isRecording ? 'var(--red)' : 'var(--gray-300)',
+                  color: isRecording ? 'white' : 'var(--gray-700)',
+                  position: 'relative',
+                }}
+                title={isRecording ? 'Stop recording' : 'Start voice input'}
+              >
+                <svg 
+                  width="20" 
+                  height="20" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                  <line x1="12" y1="19" x2="12" y2="22"/>
+                </svg>
+                {isRecording && (
+                  <span style={{
+                    position: 'absolute',
+                    top: -4,
+                    right: -4,
+                    width: 12,
+                    height: 12,
+                    background: 'white',
+                    borderRadius: '50%',
+                    animation: 'pulse-dot 1.5s infinite',
+                  }}></span>
+                )}
+              </button>
               <button 
                 className="btn btn-primary"
-                onClick={handleSend}
+                onClick={handleSendClick}
                 disabled={loading || !query.trim()}
                 style={{ minWidth: 100, padding: '10px 24px' }}
               >
