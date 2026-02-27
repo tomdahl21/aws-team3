@@ -19,7 +19,7 @@ const Logo = () => (
 export default function TopBar() {
   const pathname = usePathname();
 
-  const isRm = pathname.startsWith('/rm') || pathname.startsWith('/copilot') || pathname.startsWith('/policy-updates') || pathname.startsWith('/accounts');
+  const isRm = pathname.startsWith('/rm') || pathname.startsWith('/copilot') || pathname.startsWith('/policy-updates') || pathname.startsWith('/accounts') || pathname.startsWith('/profile');
   const isLanding = pathname === '/';
 
   const isActive = (href: string) => {
@@ -71,13 +71,13 @@ export default function TopBar() {
         {/* Divider + account */}
         <div className="topbar-right" style={{ paddingLeft: 16, marginLeft: 16, borderLeft: '1px solid rgba(255,255,255,0.12)' }}>
           {isRm && (
-            <>
+            <Link href="/rm-profile" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none', cursor: 'pointer' }}>
               <span className="topbar-user">Sophia Chen</span>
               <div className="topbar-avatar" style={{ padding: 0, overflow: 'hidden' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/sophia.png" alt="Sophia Chen" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
               </div>
-            </>
+            </Link>
           )}
           {isLanding && (
             <span className="topbar-user" style={{ fontSize: 11 }}>Sign In</span>
